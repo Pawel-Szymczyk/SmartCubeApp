@@ -1,0 +1,139 @@
+import React, {Component} from 'react';
+import { View, Text, Button, StyleSheet, TextInput, FlatList, TouchableOpacity, Image } from 'react-native';
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import { FormLabel, Header} from 'react-native-elements'
+import { List, ListItem } from 'react-native-elements';
+
+export default class DevicesScreen extends Component {
+
+    static navigationOptions = ({ navigation }) => {
+      return {
+        title: navigation.getParam('otherParam', 'Devices'),
+      };
+    };
+
+    state = {
+        seed: 1,
+        page: 1,
+        devices: [
+          {
+            name: 'Rollet',
+          },
+        ],
+        isLoading: false,
+        isRefreshing: false,
+    };
+
+    handleRefresh = () => {
+        this.setState({
+          seed: this.state.seed + 1,
+          isRefreshing: true,
+        }, () => {
+          this.loadDevices();
+        });
+      };
+    
+    handleLoadMore = () => {
+        this.setState({
+            page: this.state.page + 1,
+        }, () => {
+            this.loadDevices();
+        });
+    };
+    
+    componentDidMount() {
+        this.loadDevices();
+    }
+    
+    loadDevices = () => {
+        const {areas, seed, page} = this.state;
+        this.setState({ isLoading: true });
+    
+        // fetch here
+        
+    };
+
+    floatingButtonEvent = () => {
+        // add Area ...
+        // this.props.navigation.navigate('AddEditDevices', {
+        //   //itemId: 90,
+        //   otherParam: 'Add Area'
+        // });
+    }
+
+    actionOnRow(item) {
+        // Alert.alert("Floating Button Clicked", item.name);
+        this.props.navigation.navigate('Rollets', {
+          //itemId: 90,
+          otherParam: item.name
+        });
+      }
+
+    render() {
+        const { devices, isRefreshing } = this.state;
+
+        return (
+            <View style={styles.scene}>
+        
+                <List style={styles.scene}>
+                
+                <FlatList 
+                    data={devices}
+                    renderItem={({item}) => (
+                    <TouchableOpacity onPress = { () => this.actionOnRow(item)}>
+                        <ListItem 
+                            roundAvatar
+                            title={item.name}
+                        />
+                    </TouchableOpacity>
+
+                    )}
+                    keyExtractor={i => i.name}
+                    refreshing={isRefreshing}
+                    onRefresh={this.onRefresh}
+                    onEndReached={this.handleLoadMore}
+                    onEndThreshold={0}
+                />
+                </List>
+                
+                <TouchableOpacity activeOpacity={0.5} onPress={this.floatingButtonEvent} style={styles.touchableOpacityStyle} >
+                    <Image source={require('../images/button.png')}  style={styles.floatingButtonStyle} />
+                </TouchableOpacity>
+
+            </View>
+
+
+
+            
+        );
+    }
+
+  }
+
+  const styles = StyleSheet.create({
+    scene: {
+      flex: 1,
+      paddingTop: 25,
+    },
+    user: {
+      width: '100%',
+      backgroundColor: '#333',
+      marginBottom: 10,
+      paddingLeft: 25,
+    },
+  
+    touchableOpacityStyle: {
+      position: 'absolute',
+      width: 50,
+      height: 50,
+      alignItems: 'center',
+      justifyContent: 'center',
+      right: 30,
+      bottom: 30,
+    },
+    floatingButtonStyle: {
+      resizeMode: 'contain',
+      width: 50,
+      height: 50,
+    },
+  });

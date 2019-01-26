@@ -6,14 +6,19 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import HomeScreen from './src/views/HomeScreen';
 import DetailsScreen from './src/views/DetailsScreen';
 import LoginScreen from './src/views/LoginScreen';
-
+import AddEditAreaScreen from './src/views/AddEditAreaScreen';
+import DevicesScreen from './src/views/DevicesScreen';
+import RolletScreen from './src/views/RolletScreen';
 
 const RootStack = createStackNavigator(
   {
     Login: LoginScreen,
     // Registration: RegistrationScreen,
     Home: HomeScreen,
-    Details: DetailsScreen,
+    //Details: DetailsScreen,
+    AddEditArea: AddEditAreaScreen,
+    Devices: DevicesScreen,
+    Rollets: RolletScreen,
   },
   {
     initialRouteName: 'Login',
