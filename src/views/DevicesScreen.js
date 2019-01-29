@@ -6,23 +6,27 @@ import { List, ListItem } from 'react-native-elements';
 
 export default class DevicesScreen extends Component {
 
+    constructor(props) {
+        super(props);
+        this.params = this.props.navigation.state.params;
+
+        this.state = {
+            seed: 1,
+            page: 1,
+            devices: [],
+            isLoading: false,
+            isRefreshing: false,
+        };
+    }
+
     static navigationOptions = ({ navigation }) => {
       return {
-        title: navigation.getParam('otherParam', 'Devices'),
+        // title: navigation.getParam('otherParam', 'Devices'),
+        title: navigation.getParam('areaName', 'Devices'),
       };
     };
 
-    state = {
-        seed: 1,
-        page: 1,
-        devices: [
-          {
-            name: 'Rollet',
-          },
-        ],
-        isLoading: false,
-        isRefreshing: false,
-    };
+
 
     handleRefresh = () => {
         this.setState({
@@ -49,7 +53,19 @@ export default class DevicesScreen extends Component {
         const {areas, seed, page} = this.state;
         this.setState({ isLoading: true });
     
+
         // fetch here
+        fetch('http://192.168.0.17:3000/api/v1/devices?areaId='+ this.params.areaId)
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+            devices: res.devices,
+            isRefreshing: false,
+            });
+        })
+        .catch(err => {
+            console.error(err);
+        })
         
     };
 
@@ -62,6 +78,7 @@ export default class DevicesScreen extends Component {
     }
 
     actionOnRow(item) {
+        
         // Alert.alert("Floating Button Clicked", item.name);
         this.props.navigation.navigate('Rollets', {
           //itemId: 90,

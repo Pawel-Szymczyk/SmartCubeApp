@@ -59,7 +59,7 @@ export default class RolletScreen extends Component {
           })
         }
     
-        fetch('http://192.168.0.17:3000/devices/rollet', data)
+        fetch('http://192.168.0.17:3000/api/v1/devices/rollet', data)
         .then((response) => response.json())
         .then((responseJson) => {
           //alert(responseJson.state);
@@ -73,7 +73,7 @@ export default class RolletScreen extends Component {
         //         stateValue: 'on',
         //         actionValue: 'up' 
         //     });
-        //   }
+        //   }  
 
         //   if(event == 'down') {
         //     this.setState({

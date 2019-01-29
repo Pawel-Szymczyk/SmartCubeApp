@@ -7,6 +7,11 @@ import { List, ListItem } from 'react-native-elements';
 
 export default class HomeScreen extends Component {
 
+  constructor(props) {
+    super(props);
+    this.navigate = this.props.navigation.navigate;
+  }
+
   // Header
   static navigationOptions = {
     title: 'Home',
@@ -15,24 +20,7 @@ export default class HomeScreen extends Component {
   state = {
     seed: 1,
     page: 1,
-    areas: [
-      {
-        name: 'Room 1',
-        subtitle: 'Pawel room'
-      },
-      {
-        name: 'Room 2',
-        subtitle: 'Parents room'
-      },
-      {
-        name: 'Room 3',
-        subtitle: 'Parents room'
-      },
-      {
-        name: 'Room 4',
-        subtitle: 'Parents room'
-      },
-    ],
+    areas: [],
     isLoading: false,
     isRefreshing: false,
   };
@@ -63,10 +51,21 @@ export default class HomeScreen extends Component {
     this.setState({ isLoading: true });
 
     // fetch here
-    
+    fetch('http://192.168.0.17:3000/api/v1/areas')
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          areas: res.areas,
+          isRefreshing: false,
+        });
+      })
+      .catch(err => {
+        console.error(err);
+      })
+
   };
 
-  floatingButtonEvent = () => {
+  addAreaEvent = () => {
     // add Area ...
     this.props.navigation.navigate('AddEditArea', {
       //itemId: 90,
@@ -75,10 +74,17 @@ export default class HomeScreen extends Component {
   }
 
   actionOnRow(item) {
+   // alert(item.id);
     // Alert.alert("Floating Button Clicked", item.name);
-    this.props.navigation.navigate('Devices', {
-      //itemId: 90,
-      otherParam: item.name
+    // this.props.navigation.navigate('Devices', {
+    //   //itemId: 90,
+    //   areaId: item.id,
+    //   otherParam: item.name
+
+    // });
+    this.navigate("Devices", {
+      areaId: item.id,
+      areaName: item.name
     });
   }
 
@@ -101,7 +107,7 @@ export default class HomeScreen extends Component {
                 <ListItem 
                   roundAvatar
                   title={item.name}
-                  subtitle={item.subtitle} 
+                  subtitle={item.areaState} 
                 />
               </TouchableOpacity>
 
@@ -114,7 +120,7 @@ export default class HomeScreen extends Component {
           />
         </List>
         
-        <TouchableOpacity activeOpacity={0.5} onPress={this.floatingButtonEvent} style={styles.touchableOpacityStyle} >
+        <TouchableOpacity activeOpacity={0.5} onPress={this.addAreaEvent} style={styles.touchableOpacityStyle} >
           <Image source={require('../images/button.png')}  style={styles.floatingButtonStyle} />
         </TouchableOpacity>
 
