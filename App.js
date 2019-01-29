@@ -8,6 +8,7 @@ import DetailsScreen from './src/views/DetailsScreen';
 import LoginScreen from './src/views/LoginScreen';
 import AddEditAreaScreen from './src/views/AddEditAreaScreen';
 import DevicesScreen from './src/views/DevicesScreen';
+import AddEditDeviceScreen from './src/views/AddEditDeviceScreen';
 import RolletScreen from './src/views/RolletScreen';
 
 const RootStack = createStackNavigator(
@@ -18,6 +19,7 @@ const RootStack = createStackNavigator(
     //Details: DetailsScreen,
     AddEditArea: AddEditAreaScreen,
     Devices: DevicesScreen,
+    AddEditDevice: AddEditDeviceScreen,
     Rollets: RolletScreen,
   },
   {

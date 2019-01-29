@@ -7,6 +7,9 @@ export default class RolletScreen extends Component {
 
     constructor(props) {
         super(props);
+
+        this.params = this.props.navigation.state.params;
+
         this.state = {
           isLoading: true, 
           name: '',
@@ -20,7 +23,7 @@ export default class RolletScreen extends Component {
 
     static navigationOptions = ({ navigation }) => {
       return {
-        title: navigation.getParam('otherParam', 'Rollet'),
+        title: navigation.getParam('deviceName', 'Rollet'),
       };
     };
 

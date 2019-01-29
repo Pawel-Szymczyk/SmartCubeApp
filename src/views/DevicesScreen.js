@@ -8,9 +8,13 @@ export default class DevicesScreen extends Component {
 
     constructor(props) {
         super(props);
+        this.navigate = this.props.navigation.navigate;
         this.params = this.props.navigation.state.params;
+        
+        //alert(this.params.areaId)
 
         this.state = {
+            areaId: this.params.areaId,
             seed: 1,
             page: 1,
             devices: [],
@@ -21,7 +25,6 @@ export default class DevicesScreen extends Component {
 
     static navigationOptions = ({ navigation }) => {
       return {
-        // title: navigation.getParam('otherParam', 'Devices'),
         title: navigation.getParam('areaName', 'Devices'),
       };
     };
@@ -58,9 +61,9 @@ export default class DevicesScreen extends Component {
         fetch('http://192.168.0.17:3000/api/v1/devices?areaId='+ this.params.areaId)
         .then(res => res.json())
         .then(res => {
-            this.setState({
-            devices: res.devices,
-            isRefreshing: false,
+                this.setState({
+                devices: res.devices,
+                isRefreshing: false,
             });
         })
         .catch(err => {
@@ -69,25 +72,28 @@ export default class DevicesScreen extends Component {
         
     };
 
-    floatingButtonEvent = () => {
-        // add Area ...
-        // this.props.navigation.navigate('AddEditDevices', {
-        //   //itemId: 90,
-        //   otherParam: 'Add Area'
-        // });
+    addDeviceEvent() {
+
+        //alert(this.state.areaId)
+
+        this.navigate("AddEditDevice", {
+            name: 'Add Device',
+            areaId: this.state.areaId
+        });
+
     }
 
     actionOnRow(item) {
-        
-        // Alert.alert("Floating Button Clicked", item.name);
-        this.props.navigation.navigate('Rollets', {
-          //itemId: 90,
-          otherParam: item.name
+
+        this.navigate("Rollets", {
+            deviceName: item.name
         });
-      }
+        
+    }
 
     render() {
         const { devices, isRefreshing } = this.state;
+
 
         return (
             <View style={styles.scene}>
@@ -113,7 +119,7 @@ export default class DevicesScreen extends Component {
                 />
                 </List>
                 
-                <TouchableOpacity activeOpacity={0.5} onPress={this.floatingButtonEvent} style={styles.touchableOpacityStyle} >
+                <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addDeviceEvent()} style={styles.touchableOpacityStyle} >
                     <Image source={require('../images/button.png')}  style={styles.floatingButtonStyle} />
                 </TouchableOpacity>
 

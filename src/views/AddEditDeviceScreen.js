@@ -2,22 +2,24 @@ import React, {Component} from 'react';
 import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { FormLabel, Header} from 'react-native-elements'
 
-export default class AddEditAreaScreen extends Component {
+export default class AddEditDeviceScreen extends Component {
 
     constructor(props) {
         super(props);
         this.params = this.props.navigation.state.params;
 
+        
         this.state = {
+            areaId: this.params.areaId,
             name: '',
-            owner: '',
-            areaState: '',
+            topic: '',
         }
     }
 
     static navigationOptions = ({ navigation }) => {
+       
       return {
-        title: navigation.getParam('name', 'Add / Edit Area'),
+        title: navigation.getParam('name', 'Add / Edit Device'),
       };
     };
 
@@ -27,13 +29,11 @@ export default class AddEditAreaScreen extends Component {
         this.setState({ name: text })
     }
 
-    handleOwner = (text) => {
-        this.setState({ owner: text })
+    handleTopic = (text) => {
+        this.setState({ topic: text })
     }
 
-    handleAreaState = (text) => {
-        this.setState({ areaState: text })
-    }
+
 
     handleSaving = () => {
         let data = {
@@ -44,16 +44,18 @@ export default class AddEditAreaScreen extends Component {
             },
             body: JSON.stringify({
               name: this.state.name,
-              owner: this.state.owner,
-              areaState: this.state.areaState
+              powerState: "off",
+              deviceActionState: "stop",
+              topic: this.state.topic,
+              areaId: this.state.areaId
             })
           }
       
-          fetch('http://192.168.0.17:3000/api/v1/areas/create', data)
+          fetch('http://192.168.0.17:3000/api/v1/devices/create', data)
           .then((res) => res.json())
           .then((res) => {
                 // close this window and open main...
-                this.props.navigation.navigate('Home', {isLoading: true});
+                this.props.navigation.navigate('Devices', {isLoading: true});
           })
           .catch((error) =>{
             console.error(error);
@@ -62,26 +64,22 @@ export default class AddEditAreaScreen extends Component {
 
     render() {
         const { navigation } = this.props;
+       
 
         return (
 
 
             <View style = {styles.container}>
 
-                <FormLabel style = {styles.label}>Area Name</FormLabel>
+                <FormLabel style = {styles.label}>Device Name</FormLabel>
                 <TextInput
                     style = {styles.input}
                     onChangeText = {this.handleName}
                 />
-                <FormLabel style = {styles.label}>Owner</FormLabel>
+                <FormLabel style = {styles.label}>Device Topic</FormLabel>
                 <TextInput
                     style = {styles.input}
-                    onChangeText={this.handleOwner}
-                />
-                <FormLabel style = {styles.label}>Area State</FormLabel>
-                <TextInput
-                    style = {styles.input}
-                    onChangeText={this.handleAreaState}
+                    onChangeText={this.handleTopic}
                 />
 
                 <TouchableOpacity

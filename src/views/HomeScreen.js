@@ -10,6 +10,14 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.navigate = this.props.navigation.navigate;
+
+    this.state = {
+      seed: 1,
+      page: 1,
+      areas: [],
+      isLoading: false,
+      isRefreshing: false,
+    };
   }
 
   // Header
@@ -17,13 +25,7 @@ export default class HomeScreen extends Component {
     title: 'Home',
   };
 
-  state = {
-    seed: 1,
-    page: 1,
-    areas: [],
-    isLoading: false,
-    isRefreshing: false,
-  };
+
 
   handleRefresh = () => {
     this.setState({
@@ -65,27 +67,21 @@ export default class HomeScreen extends Component {
 
   };
 
-  addAreaEvent = () => {
-    // add Area ...
-    this.props.navigation.navigate('AddEditArea', {
-      //itemId: 90,
-      otherParam: 'Add Area'
+  addAreaEvent() {
+
+    this.navigate("AddEditArea", {
+      name: 'Add Area'
     });
+    
   }
 
   actionOnRow(item) {
-   // alert(item.id);
-    // Alert.alert("Floating Button Clicked", item.name);
-    // this.props.navigation.navigate('Devices', {
-    //   //itemId: 90,
-    //   areaId: item.id,
-    //   otherParam: item.name
 
-    // });
     this.navigate("Devices", {
       areaId: item.id,
       areaName: item.name
     });
+
   }
 
 
@@ -120,7 +116,7 @@ export default class HomeScreen extends Component {
           />
         </List>
         
-        <TouchableOpacity activeOpacity={0.5} onPress={this.addAreaEvent} style={styles.touchableOpacityStyle} >
+        <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addAreaEvent() } style={styles.touchableOpacityStyle} >
           <Image source={require('../images/button.png')}  style={styles.floatingButtonStyle} />
         </TouchableOpacity>
 
