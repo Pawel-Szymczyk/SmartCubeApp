@@ -58,7 +58,7 @@ export default class HomeScreen extends Component {
       .then(res => {
         this.setState({
           areas: res.areas,
-          isRefreshing: false,
+          isLoading: false,
         });
       })
       .catch(err => {
@@ -78,7 +78,8 @@ export default class HomeScreen extends Component {
   actionOnRow(item) {
 
     this.navigate("Devices", {
-      areaId: item.id,
+      areaId: item.areaId,
+      //devices: item.devices,
       areaName: item.name
     });
 
@@ -87,7 +88,7 @@ export default class HomeScreen extends Component {
 
   render() {
     const { areas, isRefreshing } = this.state;
-
+    
     return (
       
       // List areas

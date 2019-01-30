@@ -12,12 +12,16 @@ export default class DevicesScreen extends Component {
         this.params = this.props.navigation.state.params;
         
         //alert(this.params.areaId)
+        //alert(this.params.devices[0].rollets[0].name)
 
         this.state = {
             areaId: this.params.areaId,
             seed: 1,
             page: 1,
+
+            //devices: this.params.devices,
             devices: [],
+
             isLoading: false,
             isRefreshing: false,
         };
@@ -55,20 +59,29 @@ export default class DevicesScreen extends Component {
     loadDevices = () => {
         const {areas, seed, page} = this.state;
         this.setState({ isLoading: true });
-    
+ 
 
-        // fetch here
-        fetch('http://192.168.0.17:3000/api/v1/devices?areaId='+ this.params.areaId)
-        .then(res => res.json())
-        .then(res => {
+        fetch('http://192.168.0.17:3000/api/v1/areas/'+ this.params.areaId)
+            .then(res => res.json())
+            .then(res => {
+
+                // check if obj is empty
+                // if (this.state.acessos && this.state.acessos.length) {}
+
+                var devicesList = [];
+
+                devicesList = devicesList.concat(res.area.rollets);
+                devicesList = devicesList.concat(res.area.plugs);
+                
+
                 this.setState({
-                devices: res.devices,
-                isRefreshing: false,
-            });
-        })
-        .catch(err => {
-            console.error(err);
-        })
+                    devices: devicesList,   
+                    isLoading: false,
+                });
+            })
+            .catch(err => {
+                console.error(err);
+            })
         
     };
 
@@ -91,22 +104,31 @@ export default class DevicesScreen extends Component {
         
     }
 
+
+
+
+
     render() {
         const { devices, isRefreshing } = this.state;
 
 
+        
+
         return (
+
             <View style={styles.scene}>
         
                 <List style={styles.scene}>
                 
                 <FlatList 
-                    data={devices}
+                    data={devices}  // change here
                     renderItem={({item}) => (
+                        
                     <TouchableOpacity onPress = { () => this.actionOnRow(item)}>
                         <ListItem 
                             roundAvatar
                             title={item.name}
+                            subtitle={item.powerState}
                         />
                     </TouchableOpacity>
 
