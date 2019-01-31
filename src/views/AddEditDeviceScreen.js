@@ -1,20 +1,21 @@
 import React, {Component} from 'react';
-import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Picker } from 'react-native';
-import { FormLabel, Header} from 'react-native-elements'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Picker} from 'react-native';
+import { FormLabel, Input} from 'react-native-elements';
 
 export default class AddEditDeviceScreen extends Component {
 
     constructor(props) {
         super(props);
         this.params = this.props.navigation.state.params;
-
         
         this.state = {
             areaId: this.params.areaId,
             name: '',
             topic: '',
 
-            PickerSelectedValue: '',
+            pickerValue: '',
+
+            checked: false,
         }
     }
 
@@ -27,6 +28,7 @@ export default class AddEditDeviceScreen extends Component {
 
 
 
+
     handleName = (text) => {
         this.setState({ name: text })
     }
@@ -36,13 +38,14 @@ export default class AddEditDeviceScreen extends Component {
     }
 
     getRequestBody = () => {
-        // alert("Selected value is: " + this.state.PickerSelectedValue);
+      //  alert("Selected value is: " + this.state.pickerValue);
 
         // Note: first selection is rollet but it is empty!
-        switch(this.state.PickerSelectedValue) {
+        switch(this.state.pickerValue) {
             case 'rollet':
                 return JSON.stringify({
                             name: this.state.name,
+                            type: this.state.pickerValue,
                             powerState: "off",
                             deviceActionState: "stop",
                             topic: this.state.topic,
@@ -51,6 +54,7 @@ export default class AddEditDeviceScreen extends Component {
             case 'plug':
                 return JSON.stringify({
                             name: this.state.name,
+                            type: this.state.pickerValue,
                             powerState: "off",
                             topic: this.state.topic,
                             areaId: this.state.areaId
@@ -67,28 +71,6 @@ export default class AddEditDeviceScreen extends Component {
                 return JSON.stringify({});
         }
     }
-
-    // getRequestURL = () => {
-    //     // alert("Selected value is: " + this.state.PickerSelectedValue);
-
-    //     // Note: first selection is rollet but it is empty!
-    //     switch(this.state.PickerSelectedValue) {
-    //         case 'rollet':
-    //             return 'http://192.168.0.17:3000/api/v1/devices/rollet/create';
-    //         case 'plug':
-    //             return 'http://192.168.0.17:3000/api/v1/devices/plug/create';
-    //         case 'temp':
-    //             return 'http://192.168.0.17:3000/api/v1/devices/temperature/create';
-    //         case 'light':
-    //             return 'http://192.168.0.17:3000/api/v1/devices/light/create';
-    //         case 'motion':
-    //             return 'http://192.168.0.17:3000/api/v1/devices/motion/create';
-    //         case 'camera':
-    //             return 'http://192.168.0.17:3000/api/v1/devices/camera/create';
-    //         case 'rgb':
-    //             return 'http://192.168.0.17:3000/api/v1/devices/rgb/create';
-    //     }
-    // }
 
     handleSaving = () => {
 
@@ -113,22 +95,36 @@ export default class AddEditDeviceScreen extends Component {
             method: 'POST',
             headers: {
               Accept: 'application/json',
-              'Content-Type': 'application/json',
+              'Content-Type': 'application/json'
             },
             body: this.getRequestBody()
           }
+
+
       
-        fetch('http://192.168.0.17:3000/api/v1/devices/create', data)
-        //fetch('http://192.168.0.17:3000/api/v1/devices/' + this.state.PickerSelectedValue + 'create', data)
-          .then((res) => res.json())
-          .then((res) => {
-                // close this window and open main...
-                this.props.navigation.navigate('Devices', {isLoading: true});
-          })
-          .catch((error) =>{
-            console.error(error);
-          });
+        //fetch('http://192.168.0.17:3000/api/v1/devices/create', data)
+        // fetch('http://192.168.0.17:3000/api/v1/devices/' + this.state.pickerValue + '/create', data)
+        //   .then((res) => res.json())
+        //   .then((res) => {
+        //         // close this window and open main...
+        //         this.props.navigation.navigate('Devices', {isLoading: true});
+        //   })
+        //   .catch((error) =>{
+        //     console.error(error);
+        //   });
     }
+
+    handlePickerOption = (value) => {
+        if (value != 0) {
+            this.setState({pickerValue: value});
+        }
+        if (value === '' || value === null || value === 0) {
+            alert("change it");
+        }
+    }
+
+
+
 
 
 
@@ -142,13 +138,21 @@ export default class AddEditDeviceScreen extends Component {
             <View style = {styles.container}>
 
 
-                <FormLabel style = {styles.label}>Select Value:</FormLabel>
+                <FormLabel style = {styles.label}>Device Name</FormLabel>
+                <TextInput
+                    style = {styles.input}
+                    onChangeText = {this.handleName}
+                />
+
+                <FormLabel style = {styles.label}>Select Device Type:</FormLabel>
                 <Picker
-                    selectedValue = {this.state.PickerSelectedValue}
-                    onValueChange = {(itemValue, itemIndex) => this.setState({PickerSelectedValue: itemValue})} 
+                    style = {styles.picker}
+                    selectedValue = {this.state.pickerValue}
+                    //onValueChange = {(itemValue, itemIndex) => this.setState({pickerValue: itemValue})} 
+                    onValueChange = {this.handlePickerOption}
                     >
 
-                    {/* Here download list of devices types, for now it is hardcoded */}
+                    <Picker.Item label="Please, select device type" value='0' />
                     <Picker.Item label="Rollet" value="rollet" />
                     <Picker.Item label="Smart plug" value="plug" />
                     <Picker.Item label="Temperature Sensor" value="temp" />
@@ -156,17 +160,8 @@ export default class AddEditDeviceScreen extends Component {
                     <Picker.Item label="Motion Sensor" value="motion" />
                     <Picker.Item label="Camera" value="camera" />
                     <Picker.Item label="RGB Light" value="rgb" />
-                    {/* etc. */}
                 </Picker>
-
-                {/* <Button title="Get Selected value" onPress={this.getSelectedPickerValue }/> */}
-
-
-                <FormLabel style = {styles.label}>Device Name</FormLabel>
-                <TextInput
-                    style = {styles.input}
-                    onChangeText = {this.handleName}
-                />
+               
                 <FormLabel style = {styles.label}>Device Topic</FormLabel>
                 <TextInput
                     style = {styles.input}
@@ -190,12 +185,14 @@ export default class AddEditDeviceScreen extends Component {
 
   }
 
+
   const styles = StyleSheet.create({
     container: {
         flex: 1
     },
     label: {
         fontSize: 20,
+        color: '#B6462D'
     },
     input: {
         height: 30,
@@ -204,6 +201,7 @@ export default class AddEditDeviceScreen extends Component {
         paddingRight: 5,
         marginLeft: 15,
         marginRight: 15,
+        marginBottom: 10,
         color: '#000',
         borderBottomWidth: 1,
         backgroundColor: '#fff',
@@ -216,6 +214,11 @@ export default class AddEditDeviceScreen extends Component {
      },
      submitButtonText:{
         color: 'white'
-     }
+     },
+     picker: {
+        margin: 15,
+        
+     },
+
 
   });

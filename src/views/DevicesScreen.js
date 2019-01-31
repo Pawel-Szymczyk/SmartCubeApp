@@ -73,7 +73,6 @@ export default class DevicesScreen extends Component {
                 devicesList = devicesList.concat(res.area.rollets);
                 devicesList = devicesList.concat(res.area.plugs);
                 
-
                 this.setState({
                     devices: devicesList,   
                     isLoading: false,
@@ -96,12 +95,11 @@ export default class DevicesScreen extends Component {
 
     }
 
+    // Go to 'device' panel.
     actionOnRow(item) {
-
-        this.navigate("Rollets", {
+        this.navigate(item.type, {
             deviceName: item.name
         });
-        
     }
 
 

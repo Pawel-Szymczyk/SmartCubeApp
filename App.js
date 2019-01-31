@@ -4,8 +4,8 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 
 // Routes...
 import HomeScreen from './src/views/HomeScreen';
-import DetailsScreen from './src/views/DetailsScreen';
-import LoginScreen from './src/views/LoginScreen';
+//import DetailsScreen from './src/views/DetailsScreen';
+import LoginScreen from './src/views/Login/Login.view';
 import AddEditAreaScreen from './src/views/AddEditAreaScreen';
 import DevicesScreen from './src/views/DevicesScreen';
 import AddEditDeviceScreen from './src/views/AddEditDeviceScreen';
@@ -20,7 +20,7 @@ const RootStack = createStackNavigator(
     AddEditArea: AddEditAreaScreen,
     Devices: DevicesScreen,
     AddEditDevice: AddEditDeviceScreen,
-    Rollets: RolletScreen,
+    rollet: RolletScreen,
   },
   {
     initialRouteName: 'Login',

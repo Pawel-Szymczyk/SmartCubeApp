@@ -70,6 +70,7 @@ export default class HomeScreen extends Component {
   addAreaEvent() {
 
     this.navigate("AddEditArea", {
+      areaId: item.areaId,
       name: 'Add Area'
     });
     
