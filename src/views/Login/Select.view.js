@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { ActivityIndicator, View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { ActivityIndicator, View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, ImageBackground, StatusBar } from 'react-native';
 
 export default class SelectScreen extends Component {
 
@@ -17,6 +17,7 @@ export default class SelectScreen extends Component {
             <ImageBackground source={require('../../images/darkcubesVertical3.png')} style={styles.backgoundImg} blurRadius={0.3}>
 
                 <View style={styles.container}>
+                    <StatusBar hidden={true} />
                     <View style={styles.logoContainer}>
                         
                         <Image
