@@ -28,7 +28,8 @@ const RootStack = createStackNavigator(
     rollet: RolletScreen,
   },
   {
-    initialRouteName: 'Select',
+    // initialRouteName: 'Select',
+    initialRouteName: 'Home',
 
     // header config
     defaultNavigationOptions: {
