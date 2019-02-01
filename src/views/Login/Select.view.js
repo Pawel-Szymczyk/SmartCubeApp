@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { ActivityIndicator, View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
-export default class LoginScreen extends Component {
+export default class SelectScreen extends Component {
 
     static navigationOptions = {
         header: null
@@ -35,19 +35,19 @@ export default class LoginScreen extends Component {
 
                         <TouchableOpacity 
                             style={styles.buttonContainer}
-                            onPress = { () => this.navigate('Registration') }
+                            onPress = { () => navigate('Registration') }
                         >
-                            <Text style={styles.buttonText}>SIGN UP</Text>
+                            <Text style={styles.buttonText}>Create Account</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity 
                             style={styles.button2Container}
                             onPress = { () => navigate('Login') }
                         >
-                            <Text style={styles.button2Text}>LOGIN</Text>
+                            <Text style={styles.button2Text}>Sign In</Text>
                         </TouchableOpacity>
 
-                    </View>
+                    </View> 
                 </View>
             </ImageBackground>
         )    
@@ -70,10 +70,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(52, 73, 94, .5)'
     },
     logoContainer: {
-       flex: 3,
-       alignItems: 'center',
-       justifyContent: 'center',
-       marginTop: 140,
+        flex: 99,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 60,
     },
     logo: {
         width: 90,
@@ -94,9 +94,9 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         alignSelf: 'center',
-        flex: 3,
+        flex: 1,
         justifyContent: 'flex-end',
-        paddingBottom: 60,
+        marginBottom: 60
     },
     buttonContainer: {
         borderWidth: 1,

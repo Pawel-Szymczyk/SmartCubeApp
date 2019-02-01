@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
-// import LoginForm from './LoginForm.view';
 
 export default class LoginScreen extends Component {
 
@@ -70,16 +69,10 @@ export default class LoginScreen extends Component {
                         </TouchableOpacity>
 
                     </View>
-                    
                 </View>
-
             </ImageBackground>
-
-
-
         )    
     };
-    
 }
 
 
@@ -90,21 +83,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
-        //  opacity: 0.5
-       // resizeMode: 'stretch',
     },
     container: {
         flex: 2,
-        // backgroundColor: '#3498db',
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
         backgroundColor: 'rgba(52, 73, 94,.5)'
     },
     logoContainer: {
-       
        alignItems: 'center',
        flexGrow: 2,
-       justifyContent: 'center',
+       justifyContent: 'flex-end',
+       paddingBottom: 65,
     },
     logo: {
         width: 90,

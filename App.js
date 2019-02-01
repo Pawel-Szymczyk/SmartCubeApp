@@ -22,7 +22,6 @@ const RootStack = createStackNavigator(
     Registration: RegistrationScreen,
 
     Home: HomeScreen,
-    //Details: DetailsScreen,
     AddEditArea: AddEditAreaScreen,
     Devices: DevicesScreen,
     AddEditDevice: AddEditDeviceScreen,
