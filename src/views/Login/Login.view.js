@@ -17,6 +17,7 @@ export default class LoginScreen extends Component {
     }
 
     render() {
+        const {navigate} = this.props.navigation;
         return (
             <ImageBackground source={require('../../images/darkcubesVertical3.png')} style={styles.backgoundImg} blurRadius={0.4}>
 
@@ -38,30 +39,33 @@ export default class LoginScreen extends Component {
                     <View style={styles.formContainer}>
 
                         <TextInput
-                                style={styles.input}
-                                placeholder = 'Username'
-                                placeholderTextColor='rgba(255,255,255,0.7)'
-                                returnKeyType="next"
-                                onSubmitEditing={() => this.passwordInput.focus()}
-                                keyboardType='email-address'
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                // onChangeText={(username) => this.setState({username})}
+                            style={styles.input}
+                            placeholder = 'Username'
+                            placeholderTextColor='rgba(255,255,255,0.7)'
+                            returnKeyType="next"
+                            onSubmitEditing={() => this.passwordInput.focus()}
+                            keyboardType='email-address'
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            // onChangeText={(username) => this.setState({username})}
                         />
                         <TextInput
-                                style={styles.input}
-                                placeholder = 'Password'
-                                placeholderTextColor='rgba(255,255,255,0.7)'
-                                returnKeyType="go"
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                ref={(input) => this.passwordInput = input}
-                                secureTextEntry
-                                // onChangeText={(password) => this.setState({password})}
+                            style={styles.input}
+                            placeholder = 'Password'
+                            placeholderTextColor='rgba(255,255,255,0.7)'
+                            returnKeyType="go"
+                            autoCapitalize='none'
+                            autoCorrect={false}
+                            ref={(input) => this.passwordInput = input}
+                            secureTextEntry
+                            // onChangeText={(password) => this.setState({password})}
                         />
                         
-                        <TouchableOpacity style={styles.buttonContainer}>
-                            <Text style={styles.buttonText}>LOGIN</Text>
+                        <TouchableOpacity 
+                            style={styles.buttonContainer}
+                            onPress = { () => navigate('Home') }
+                        >
+                            <Text style={styles.buttonText}>Sign In</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity>
@@ -118,18 +122,27 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 40,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        marginBottom: 10,
+        borderBottomWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.8)',
+        marginBottom: 20,
         color: '#FFF',
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        width: 250,
+        alignSelf: 'center',
     },
     buttonContainer: {
-        backgroundColor: '#2980b9',
-        paddingVertical: 10
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderWidth: 1,
+        borderColor: '#fff',
+        borderRadius: 7,
+        paddingVertical: 10,
+        width: 260,
+        marginBottom: 15,
+        alignSelf: 'center',
     },
     buttonText: {
         textAlign: 'center',
-        color: '#FFF',
+        color: '#000',
         fontWeight: '700',
     },
     labelText: {
