@@ -23,15 +23,17 @@ export default class LoginScreen extends Component {
 
                 <View style={styles.container}>
                     <View style={styles.logoContainer}>
-                        {/* logo here... */}
-
                         
                         <Image
                             style={styles.logo}
                             source={require('../../images/whiteCube.png')}
                         />
-                        <Text style={styles.title}>cubeautomation</Text>
-                        
+
+                        <Text>
+                            <Text style={styles.title}>cube</Text>
+                            <Text style={styles.title2Part}>automation</Text>
+                        </Text>
+
                     </View>
 
                     <View style={styles.formContainer}>
@@ -60,7 +62,7 @@ export default class LoginScreen extends Component {
                         />
                         
                         <TouchableOpacity style={styles.buttonContainer}>
-                            <Text style={styles.buttonText}>Login</Text>
+                            <Text style={styles.buttonText}>LOGIN</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity>
@@ -109,11 +111,17 @@ const styles = StyleSheet.create({
         height: 90,
     },
     title: {
+        fontSize: 28,
+        color: '#fff',
+        marginTop: 10,
+        textAlign: 'center',
+    },
+    title2Part: {
         fontSize: 30,
         color: '#fff',
         marginTop: 10,
         textAlign: 'center',
-        opacity: 0.9
+        fontWeight: 'bold'
     },
     formContainer: {
         padding: 20,
@@ -127,7 +135,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         backgroundColor: '#2980b9',
-        paddingVertical: 15
+        paddingVertical: 10
     },
     buttonText: {
         textAlign: 'center',
