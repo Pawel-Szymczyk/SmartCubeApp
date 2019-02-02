@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity  } from 'react-native';
 
-export default class RolletScreen extends Component {
+export default class PlugScreen extends Component {
 
     constructor(props) {
         super(props);

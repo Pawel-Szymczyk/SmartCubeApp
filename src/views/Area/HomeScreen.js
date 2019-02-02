@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Platform, StyleSheet, View, Image, TouchableOpacity, Alert, Text, FlatList, Dimensions, onPress } from 'react-native';
+import { Platform, StyleSheet, View, Image, TouchableOpacity, Text, FlatList, Dimensions } from 'react-native';
 import { List, ListItem, Button } from 'react-native-elements';
 
 import Logo from "../../components/nav";

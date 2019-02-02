@@ -1,8 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Button, StyleSheet, TextInput, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
-import { createStackNavigator, createAppContainer } from "react-navigation";
-import { FormLabel, Header} from 'react-native-elements'
-import { List, ListItem } from 'react-native-elements';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 
 export default class DevicesScreen extends Component {
 

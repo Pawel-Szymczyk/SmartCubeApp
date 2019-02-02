@@ -14,6 +14,7 @@ import AddEditAreaScreen from './src/views/Area/AddEditAreaScreen';
 import DevicesScreen from './src/views/Device/DevicesScreen';
 import AddEditDeviceScreen from './src/views/Device/AddEditDeviceScreen';
 import RolletScreen from './src/views/Device/RolletScreen';
+import PlugScreen from './src/views/Device/PlugScreen';
 
 const RootStack = createStackNavigator(
   {
@@ -25,7 +26,9 @@ const RootStack = createStackNavigator(
     AddEditArea: AddEditAreaScreen,
     Devices: DevicesScreen,
     AddEditDevice: AddEditDeviceScreen,
+
     rollet: RolletScreen,
+    plug: PlugScreen,
   },
   {
      //initialRouteName: 'Select',
