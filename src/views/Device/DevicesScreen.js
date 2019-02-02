@@ -140,7 +140,7 @@ export default class DevicesScreen extends Component {
                 </List>
                 
                 <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addDeviceEvent()} style={styles.touchableOpacityStyle} >
-                    <Image source={require('../images/button.png')}  style={styles.floatingButtonStyle} />
+                    <Image source={require('../../images/addButton.png')}  style={styles.floatingButtonStyle} />
                 </TouchableOpacity>
 
             </View>

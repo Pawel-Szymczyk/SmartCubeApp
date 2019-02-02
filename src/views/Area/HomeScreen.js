@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Platform, StyleSheet, View, Image, TouchableOpacity, Alert, Text, FlatList, Dimensions, onPress } from 'react-native';
 import { List, ListItem, Button } from 'react-native-elements';
 
-import Logo from "../components/nav";
+import Logo from "../../components/nav";
 
 
 export default class HomeScreen extends Component {
@@ -21,18 +21,14 @@ export default class HomeScreen extends Component {
   }
 
   // Header
-  // static navigationOptions = {
-  //   title: 'Home',
-  // };
-
   static navigationOptions = ({navigation}) => {
     return {
-    headerTitle: <Logo />,
-    headerLeft: (
-      <TouchableOpacity onPress={() => navigation.openDrawer()} >
-        <Image source={require('../images/hamburgerIcon.png')}  style={{width: 30, height: 30}} />
-      </TouchableOpacity>
-    ),
+      headerTitle: <Logo />,
+      headerLeft: (
+        <TouchableOpacity onPress={() => navigation.openDrawer()} >
+          <Image source={require('../../images/hamburgerIcon.png')}  style={{width: 30, height: 30}} />
+        </TouchableOpacity>
+      ),
     };
   };
 
@@ -126,8 +122,8 @@ export default class HomeScreen extends Component {
                 onPress = { () => this.actionOnRow(item)}
                 style={styles.box}
               >
-                <Text>{item.name}</Text>
-                <Text>{item.areaState} </Text>
+                <Text style={styles.boxName}>{item.name}</Text>
+                <Text style={styles.boxState}>{item.areaState} </Text>
               </TouchableOpacity> 
 
             </View>
@@ -141,12 +137,9 @@ export default class HomeScreen extends Component {
         />
 
         <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addAreaEvent() } style={styles.touchableOpacityStyle} >
-          <Image source={require('../images/button.png')}  style={styles.floatingButtonStyle} />
+          <Image source={require('../../images/addButton.png')}  style={styles.floatingButtonStyle} />
         </TouchableOpacity>
 
-        {/* <Button 
-          onPress={() => this.props.navigation.openDrawer()}
-        /> */}
       </View>
 
 
@@ -154,38 +147,6 @@ export default class HomeScreen extends Component {
 
 
       
-      // List areas
-      // Add button
-      // <View style={styles.scene}>
-
-            
-      //   <List style={styles.scene}>
-        
-      //     <FlatList 
-      //       data={areas}
-      //       renderItem={({item}) => (
-      //         <TouchableOpacity onPress = { () => this.actionOnRow(item)}>
-      //           <ListItem 
-      //             roundAvatar
-      //             title={item.name}
-      //             subtitle={item.areaState} 
-      //           />
-      //         </TouchableOpacity>
-
-      //       )}
-      //       keyExtractor={i => i.name}
-      //       refreshing={isRefreshing}
-      //       onRefresh={this.onRefresh}
-      //       onEndReached={this.handleLoadMore}
-      //       onEndThreshold={0}
-      //     />
-      //   </List>
-        
-      //   <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addAreaEvent() } style={styles.touchableOpacityStyle} >
-      //     <Image source={require('../images/button.png')}  style={styles.floatingButtonStyle} />
-      //   </TouchableOpacity>
-
-      // </View>
     )
   }
 
@@ -199,8 +160,8 @@ const styles = StyleSheet.create({
     // paddingTop: 30,
     //backgroundColor: 'rgba(52, 73, 94, 0.9)',
     backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#000',
+    // borderWidth: 1,
+    // borderColor: '#000',
   },
 
   boxes: {
@@ -220,16 +181,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  // scene: {
-  //   flex: 1,
-  //   paddingTop: 25,
-  // },
-  // user: {
-  //   width: '100%',
-  //   backgroundColor: '#333',
-  //   marginBottom: 10,
-  //   paddingLeft: 25,
-  // },
+
+  boxName: {
+    fontSize: 16,
+    color: '#000'
+  },
+
+  boxState: {
+    fontSize: 14,
+    
+  },
 
   touchableOpacityStyle: {
     position: 'absolute',

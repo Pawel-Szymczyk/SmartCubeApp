@@ -9,11 +9,11 @@ import SelectScreen from './src/views/Login/Select.view';
 import LoginScreen from './src/views/Login/Login.view';
 import RegistrationScreen from './src/views/Login/Register.view';
 
-import HomeScreen from './src/views/HomeScreen';
-import AddEditAreaScreen from './src/views/AddEditAreaScreen';
-import DevicesScreen from './src/views/DevicesScreen';
-import AddEditDeviceScreen from './src/views/AddEditDeviceScreen';
-import RolletScreen from './src/views/RolletScreen';
+import HomeScreen from './src/views/Area/HomeScreen';
+import AddEditAreaScreen from './src/views/Area/AddEditAreaScreen';
+import DevicesScreen from './src/views/Device/DevicesScreen';
+import AddEditDeviceScreen from './src/views/Device/AddEditDeviceScreen';
+import RolletScreen from './src/views/Device/RolletScreen';
 
 const RootStack = createStackNavigator(
   {
@@ -28,13 +28,14 @@ const RootStack = createStackNavigator(
     rollet: RolletScreen,
   },
   {
-    // initialRouteName: 'Select',
-    initialRouteName: 'Home',
+     //initialRouteName: 'Select',
+     initialRouteName: 'Home',
 
     // header config
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: '#34495e',
+        backgroundColor: '#34495e'
+
       },
       headerTintColor: '#fff',
       headerTitleStyle: {

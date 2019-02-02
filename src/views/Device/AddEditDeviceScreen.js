@@ -19,11 +19,19 @@ export default class AddEditDeviceScreen extends Component {
         }
     }
 
-    static navigationOptions = ({ navigation }) => {
-       
-      return {
-        title: navigation.getParam('name', 'Add / Edit Device'),
-      };
+    // Header
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: navigation.getParam('name', 'Add / Edit Device'),
+            headerRight: (
+                <TouchableOpacity
+                    style = {styles.submitButton}
+                    onPress = { () => this.handleSaving() }
+                >
+                    <Text style = {styles.submitButtonText}> Save </Text>
+                </TouchableOpacity>
+            ),
+        };
     };
 
 
@@ -124,17 +132,9 @@ export default class AddEditDeviceScreen extends Component {
     }
 
 
-
-
-
-
     render() {
         const { navigation } = this.props;
-       
-
         return (
-
-
             <View style = {styles.container}>
 
 
@@ -168,21 +168,10 @@ export default class AddEditDeviceScreen extends Component {
                     onChangeText={this.handleTopic}
                 />
 
-                <TouchableOpacity
-                    style = {styles.submitButton}
-                    onPress = { () => this.handleSaving() }
-                >
-                    <Text style = {styles.submitButtonText}> Save </Text>
-                </TouchableOpacity>
             </View>
 
-
-
-            
         )
     }
-
-
   }
 
 
@@ -207,10 +196,12 @@ export default class AddEditDeviceScreen extends Component {
         backgroundColor: '#fff',
     },
     submitButton: {
-        backgroundColor: '#7a42f4',
         padding: 10,
         margin: 15,
         height: 40,
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: '#fff',
      },
      submitButtonText:{
         color: 'white'
