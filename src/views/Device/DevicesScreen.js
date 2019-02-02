@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Button, StyleSheet, TextInput, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Button, StyleSheet, TextInput, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import { FormLabel, Header} from 'react-native-elements'
 import { List, ListItem } from 'react-native-elements';
@@ -11,15 +11,12 @@ export default class DevicesScreen extends Component {
         this.navigate = this.props.navigation.navigate;
         this.params = this.props.navigation.state.params;
         
-        //alert(this.params.areaId)
-        //alert(this.params.devices[0].rollets[0].name)
 
         this.state = {
             areaId: this.params.areaId,
             seed: 1,
             page: 1,
 
-            //devices: this.params.devices,
             devices: [],
 
             isLoading: false,
@@ -85,9 +82,6 @@ export default class DevicesScreen extends Component {
     };
 
     addDeviceEvent() {
-
-        //alert(this.state.areaId)
-
         this.navigate("AddEditDevice", {
             name: 'Add Device',
             areaId: this.state.areaId
@@ -103,68 +97,68 @@ export default class DevicesScreen extends Component {
     }
 
 
-
-
-
     render() {
         const { devices, isRefreshing } = this.state;
-
-
-        
-
         return (
-
             <View style={styles.scene}>
-        
-                <List style={styles.scene}>
-                
-                <FlatList 
-                    data={devices}  // change here
-                    renderItem={({item}) => (
-                        
-                    <TouchableOpacity onPress = { () => this.actionOnRow(item)}>
-                        <ListItem 
-                            roundAvatar
-                            title={item.name}
-                            subtitle={item.powerState}
-                        />
-                    </TouchableOpacity>
-
-                    )}
-                    keyExtractor={i => i.name}
-                    refreshing={isRefreshing}
-                    onRefresh={this.onRefresh}
-                    onEndReached={this.handleLoadMore}
-                    onEndThreshold={0}
-                />
-                </List>
-                
-                <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addDeviceEvent()} style={styles.touchableOpacityStyle} >
-                    <Image source={require('../../images/addButton.png')}  style={styles.floatingButtonStyle} />
-                </TouchableOpacity>
-
-            </View>
-
-
-
-            
-        );
+              <FlatList 
+                data={devices}
+                renderItem={({item}) => (
+                  
+                  <View style={styles.boxes}>
+                    <TouchableOpacity 
+                      onPress = { () => this.actionOnRow(item)}
+                      style={styles.box}
+                    >
+                      <Text style={styles.boxName}>{item.name}</Text>
+                      <Text style={styles.boxState}>{item.powerState} </Text>
+                    </TouchableOpacity> 
+                  </View>
+              )}
+                numColumns={3}
+                keyExtractor={(index) => index.name}
+                refreshing={isRefreshing}
+                onRefresh={this.onRefresh}
+                onEndReached={this.handleLoadMore}
+                onEndThreshold={0}
+              />
+      
+              <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addDeviceEvent() } style={styles.touchableOpacityStyle} >
+                <Image source={require('../../images/addButton.png')}  style={styles.floatingButtonStyle} />
+              </TouchableOpacity>
+      
+            </View>  
+          )
     }
+}
 
-  }
-
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     scene: {
+      justifyContent: 'center',
       flex: 1,
-      paddingTop: 25,
+      backgroundColor: '#fff',
     },
-    user: {
-      width: '100%',
-      backgroundColor: '#333',
-      marginBottom: 10,
-      paddingLeft: 25,
+    boxes: {
+      flex: 1, 
+      flexDirection: 'column',
+      margin: 2,
+      backgroundColor: '#ecf0f1',
+      borderWidth: 1,
+      borderColor: '#ecf0f1',
+      height: Dimensions.get('window').width / 3,
     },
-  
+    box: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    boxName: {
+      fontSize: 16,
+      color: '#000'
+    },
+    boxState: {
+      fontSize: 14,
+    },
     touchableOpacityStyle: {
       position: 'absolute',
       width: 50,

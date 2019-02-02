@@ -92,32 +92,16 @@ export default class HomeScreen extends Component {
 
   }
 
-
-
-
-
-
-
-
-
-
-
   render() {
     const { areas, isRefreshing } = this.state;
     
     return (
-
-   
-
       <View style={styles.scene}>
-        
-
         <FlatList 
           data={areas}
           renderItem={({item}) => (
             
             <View style={styles.boxes}>
-
               <TouchableOpacity 
                 onPress = { () => this.actionOnRow(item)}
                 style={styles.box}
@@ -125,7 +109,6 @@ export default class HomeScreen extends Component {
                 <Text style={styles.boxName}>{item.name}</Text>
                 <Text style={styles.boxState}>{item.areaState} </Text>
               </TouchableOpacity> 
-
             </View>
         )}
           numColumns={3}
@@ -140,58 +123,39 @@ export default class HomeScreen extends Component {
           <Image source={require('../../images/addButton.png')}  style={styles.floatingButtonStyle} />
         </TouchableOpacity>
 
-      </View>
-
-
-
-
-
-      
+      </View>  
     )
   }
 
 }
 
 const styles = StyleSheet.create({
-
   scene: {
     justifyContent: 'center',
     flex: 1,
-    // paddingTop: 30,
-    //backgroundColor: 'rgba(52, 73, 94, 0.9)',
     backgroundColor: '#fff',
-    // borderWidth: 1,
-    // borderColor: '#000',
   },
-
   boxes: {
     flex: 1, 
     flexDirection: 'column',
     margin: 2,
-
     backgroundColor: '#ecf0f1',
-
     borderWidth: 1,
     borderColor: '#ecf0f1',
     height: Dimensions.get('window').width / 3,
   },
-
   box: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   boxName: {
     fontSize: 16,
     color: '#000'
   },
-
   boxState: {
     fontSize: 14,
-    
   },
-
   touchableOpacityStyle: {
     position: 'absolute',
     width: 50,
