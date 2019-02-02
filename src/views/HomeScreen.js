@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { Platform, StyleSheet, View, Image, TouchableOpacity, Alert, Text, FlatList, Dimensions } from 'react-native';
-import { createStackNavigator, createAppContainer } from "react-navigation";
-import { List, ListItem } from 'react-native-elements';
+import { Platform, StyleSheet, View, Image, TouchableOpacity, Alert, Text, FlatList, Dimensions, onPress } from 'react-native';
+import { List, ListItem, Button } from 'react-native-elements';
+
+import Logo from "../components/nav";
 
 
 export default class HomeScreen extends Component {
@@ -20,8 +21,19 @@ export default class HomeScreen extends Component {
   }
 
   // Header
-  static navigationOptions = {
-    title: 'Home',
+  // static navigationOptions = {
+  //   title: 'Home',
+  // };
+
+  static navigationOptions = ({navigation}) => {
+    return {
+    headerTitle: <Logo />,
+    headerLeft: (
+      <TouchableOpacity onPress={() => navigation.openDrawer()} >
+        <Image source={require('../images/hamburgerIcon.png')}  style={{width: 30, height: 30}} />
+      </TouchableOpacity>
+    ),
+    };
   };
 
 
@@ -69,7 +81,6 @@ export default class HomeScreen extends Component {
   addAreaEvent() {
 
     this.navigate("AddEditArea", {
-      areaId: item.areaId,
       name: 'Add Area'
     });
     
@@ -100,7 +111,11 @@ export default class HomeScreen extends Component {
     
     return (
 
+   
+
       <View style={styles.scene}>
+        
+
         <FlatList 
           data={areas}
           renderItem={({item}) => (
@@ -117,13 +132,21 @@ export default class HomeScreen extends Component {
 
             </View>
         )}
-        numColumns={3}
-        keyExtractor={(index) => index.name}
-                    refreshing={isRefreshing}
-            onRefresh={this.onRefresh}
-            onEndReached={this.handleLoadMore}
-            onEndThreshold={0}
+          numColumns={3}
+          keyExtractor={(index) => index.name}
+          refreshing={isRefreshing}
+          onRefresh={this.onRefresh}
+          onEndReached={this.handleLoadMore}
+          onEndThreshold={0}
         />
+
+        <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addAreaEvent() } style={styles.touchableOpacityStyle} >
+          <Image source={require('../images/button.png')}  style={styles.floatingButtonStyle} />
+        </TouchableOpacity>
+
+        {/* <Button 
+          onPress={() => this.props.navigation.openDrawer()}
+        /> */}
       </View>
 
 
@@ -174,8 +197,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     // paddingTop: 30,
-
-
+    //backgroundColor: 'rgba(52, 73, 94, 0.9)',
+    backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#000',
   },
@@ -185,9 +208,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     margin: 2,
 
+    backgroundColor: '#ecf0f1',
 
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#ecf0f1',
     height: Dimensions.get('window').width / 3,
   },
 
@@ -207,18 +231,18 @@ const styles = StyleSheet.create({
   //   paddingLeft: 25,
   // },
 
-  // touchableOpacityStyle: {
-  //   position: 'absolute',
-  //   width: 50,
-  //   height: 50,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   right: 30,
-  //   bottom: 30,
-  // },
-  // floatingButtonStyle: {
-  //   resizeMode: 'contain',
-  //   width: 50,
-  //   height: 50,
-  // },
+  touchableOpacityStyle: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 30,
+  },
+  floatingButtonStyle: {
+    resizeMode: 'contain',
+    width: 50,
+    height: 50,
+  },
 });

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 //import { View, Text, Button } from 'react-native';
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import { createStackNavigator, createAppContainer, createDrawerNavigator } from "react-navigation";
 
 // Routes...
 
@@ -28,23 +28,35 @@ const RootStack = createStackNavigator(
     rollet: RolletScreen,
   },
   {
-     initialRouteName: 'Select',
-    //initialRouteName: 'Home',
+    // initialRouteName: 'Select',
+    initialRouteName: 'Home',
 
     // header config
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: '#f4511e',
+        backgroundColor: '#34495e',
       },
       headerTintColor: '#fff',
       headerTitleStyle: {
         fontWeight: 'bold',
       },
+      
     },
   }
 );
 
-const AppContainer = createAppContainer(RootStack);
+
+const RootDrawer = createDrawerNavigator(
+  {
+    Home: { screen: RootStack, },
+  },
+  {
+    initialRouteName: 'Home',
+    drawerWidth: 200
+  }
+);
+
+const AppContainer = createAppContainer(RootDrawer);
 
 export default class App extends Component {
   render() {
