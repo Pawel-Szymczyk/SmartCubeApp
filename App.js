@@ -31,8 +31,8 @@ const RootStack = createStackNavigator(
     plug: PlugScreen,
   },
   {
-     //initialRouteName: 'Select',
-     initialRouteName: 'Home',
+    // initialRouteName: 'Select',
+    initialRouteName: 'Home',
 
     // header config
     defaultNavigationOptions: {

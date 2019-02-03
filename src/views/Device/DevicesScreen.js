@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { Button, ThemeProvider } from 'react-native-elements';
 
 export default class DevicesScreen extends Component {
 

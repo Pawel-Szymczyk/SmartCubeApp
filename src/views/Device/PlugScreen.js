@@ -9,13 +9,12 @@ export default class PlugScreen extends Component {
         this.params = this.props.navigation.state.params;
 
         this.state = {
+
           isLoading: true, 
           name: '',
 
-          switchValue: false,
-
-          stateValue: 'off',
-          actionValue: 'stop',
+          plugBoolValue: false,
+          plugStringValue: 'on',
         };
     }
 
@@ -25,79 +24,69 @@ export default class PlugScreen extends Component {
       };
     };
 
-    _changeStateValue() {
 
-        if(this.state.switchValue == false) {
+    // load data from server
+    getData(){
+
+    }
+
+    // send message to the server
+    plugControl() {
+
+        this.setState({
+            plugBoolValue: !this.state.plugBoolValue,
+        })
+
+        if(this.state.plugBoolValue) {
             this.setState({
-                switchValue: true,
-                stateValue: 'on',
-                actionValue: 'stop',
+                plugStringValue: 'on',
             });
+            
         } else {
             this.setState({
-                switchValue: false,
-                stateValue: 'off',
-                actionValue: 'stop',
+                plugStringValue: 'off',
             });
-
+            
         }
 
-    }
-
-    _rolletControl(event) {
-
+        // post message
         let data = {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            // state: this.state.stateValue,
-            // action: this.state.actionValue,
-            state: 'on',
-            action: event,
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              state: this.state.plugStringValue
+            })
+          }
+  
+  
+          // add device id to url
+          fetch('http://192.168.0.17:3000/api/v1/devices/plug', data)
+          .then((response) => response.json())
+          .then((responseJson) => {
+  
+  
+          //   if(responseJson.state == false) {
+          //     this.setState({
+          //         plugBoolValue: true,
+          //         plugStringValue: 'on'
+          //     });
+          //   }
+          //   else {
+          //     this.setState({
+          //         plugBoolValue: false,
+          //         plugStringValue: 'off'
+          //     });
+          //   }
+  
           })
-        }
-    
-        fetch('http://192.168.0.17:3000/api/v1/devices/rollet', data)
-        .then((response) => response.json())
-        .then((responseJson) => {
-          //alert(responseJson.state);
-  
-          // this.setState({
-          //   lightValue: responseJson.state
-          // })
+          .catch((error) =>{
+            console.error(error);
+          });
 
-        //   if(event == 'up') {
-        //     this.setState({
-        //         stateValue: 'on',
-        //         actionValue: 'up' 
-        //     });
-        //   }  
-
-        //   if(event == 'down') {
-        //     this.setState({
-        //         stateValue: 'on',
-        //         actionValue: 'down' 
-        //     });
-        //   }
-
-        //   if(event == 'stop') {
-        //     this.setState({
-        //         stateValue: 'on',
-        //         actionValue: 'stop' 
-        //     });
-        //   }
-
-
-    
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-  
-    }
+    };
 
 
 
@@ -108,42 +97,25 @@ export default class PlugScreen extends Component {
 
             <View style = {styles.container}>
 
-                <Text style={{paddingTop: 30, paddingLeft: 10}}>Rollet</Text>
+                <View style={styles.box}>
+                    <Text style={styles.textBox}>State</Text>
+                    <Switch
+                        style={styles.switchBox}
+                        onValueChange = {() => this.plugControl()}
+                        value = {this.state.plugBoolValue}
+                    />
+                </View>
 
-                <Switch
-                    onValueChange = {() => this._changeStateValue()}
-                    value = {this.state.switchValue}
-                />
+                {/* todo */}
+                <View style={styles.box}>
+                    <Text style={styles.textBox}>State</Text>
+                    <Text style={styles.textBox}>Text here </Text>
+                </View>
 
-
-                <TouchableOpacity
-                    onPress={() => this._rolletControl('up')}
-                    disabled={!this.state.switchValue}
-                    style={ !this.state.switchValue ? styles.disabledBtn : styles.button }
-                >
-                  <Text>UP</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    onPress={() => this._rolletControl('stop')}
-                    disabled={!this.state.switchValue}
-                    style={ !this.state.switchValue ? styles.disabledBtn : styles.button }
-                >
-                  <Text>STOP</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    onPress={() => this._rolletControl('down')}
-                    disabled={!this.state.switchValue}
-                    style={ !this.state.switchValue ? styles.disabledBtn : styles.button }
-                >
-                  <Text>DOWN</Text>
-                </TouchableOpacity>
 
 
             </View>
 
-            
         )
     }
 
@@ -153,33 +125,27 @@ export default class PlugScreen extends Component {
     container: {
         flex: 1
     },
-    label: {
-        fontSize: 20,
-    },
-    input: {
-        height: 30,
-        padding: 0,
-        paddingLeft: 5,
-        paddingRight: 5,
-        marginLeft: 15,
-        marginRight: 15,
-        color: '#000',
+
+    box: {
+        flexDirection: 'row',
+        height: 70,
+        borderBottomColor: '#ccc',
         borderBottomWidth: 1,
-        backgroundColor: '#fff',
-    },
-
-    button: {
-        alignItems: 'center',
-        backgroundColor: '#841584',
-        padding: 10,
         margin: 10,
-        
+        padding: 10
     },
 
-    disabledBtn: {
-        alignItems: 'center',
-        backgroundColor: '#bbb',
-        padding: 10,
-        margin: 10
+    textBox: {
+        flex: 1,
+        alignSelf: 'center',
+        fontSize: 18,
+        color: '#000',
+        // borderWidth: 1,
+        // borderColor: 'red',
     },
+
+    switchBox: {
+        flex: 1,
+    },
+
   });

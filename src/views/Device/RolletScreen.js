@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity  } from 'react-native';
+import { View, Text, StyleSheet, Switch, TouchableOpacity, Image  } from 'react-native';
 
 export default class RolletScreen extends Component {
 
@@ -100,86 +100,126 @@ export default class RolletScreen extends Component {
     }
 
 
-
     render() {
         const { navigation } = this.props;
 
         return (
 
             <View style = {styles.container}>
-
                 <Text style={{paddingTop: 30, paddingLeft: 10}}>Rollet</Text>
 
-                <Switch
-                    onValueChange = {() => this._changeStateValue()}
-                    value = {this.state.switchValue}
-                />
 
 
-                <TouchableOpacity
-                    onPress={() => this._rolletControl('up')}
-                    disabled={!this.state.switchValue}
-                    style={ !this.state.switchValue ? styles.disabledBtn : styles.button }
-                >
-                  <Text>UP</Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity
-                    onPress={() => this._rolletControl('stop')}
-                    disabled={!this.state.switchValue}
-                    style={ !this.state.switchValue ? styles.disabledBtn : styles.button }
-                >
-                  <Text>STOP</Text>
-                </TouchableOpacity>
+                <View style={styles.box}>
+                    <Text style={styles.textBox}>State</Text>
+                    <Switch
+                        style={styles.switchBox}
+                        // onValueChange = {() => this.plugControl()}
+                        // value = {this.state.plugBoolValue}
+                        onValueChange = {() => this._changeStateValue()}
+                        value = {this.state.switchValue}
+                        // TODO: later fix this issue; and provide ability to make rollet 'on' but without executing action
+                    />
+                </View>
 
-                <TouchableOpacity
-                    onPress={() => this._rolletControl('down')}
-                    disabled={!this.state.switchValue}
-                    style={ !this.state.switchValue ? styles.disabledBtn : styles.button }
-                >
-                  <Text>DOWN</Text>
-                </TouchableOpacity>
+                <View style={styles.actionBox}>
+                    <Text style={styles.textBox}>Action</Text>
 
+                    <TouchableOpacity
+                        onPress={() => this._rolletControl('up')}
+                        disabled={!this.state.switchValue}
+                        style={ !this.state.switchValue ? styles.disabledBtn : styles.button }
+                    >
+                    <Image 
+                        source={require('../../images/upArrow.png')}
+                        style={styles.image}
+                        
+                    />
+                    </TouchableOpacity>
 
+                    <TouchableOpacity
+                        onPress={() => this._rolletControl('stop')}
+                        disabled={!this.state.switchValue}
+                        style={ !this.state.switchValue ? styles.disabledBtn : styles.button }
+                    >
+                    <Image 
+                        source={require('../../images/pauseBtn.png')}
+                        style={{width: 22, height: 22}}
+                    />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        onPress={() => this._rolletControl('down')}
+                        disabled={!this.state.switchValue}
+                        style={ !this.state.switchValue ? styles.disabledBtn : styles.button }
+                    >
+                    <Image 
+                        source={require('../../images/downArrow.png')}
+                        style={styles.image}
+                    />
+                    </TouchableOpacity>
+                    
+                </View>
             </View>
 
-            
         )
     }
-
   }
 
   const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    label: {
-        fontSize: 20,
-    },
-    input: {
-        height: 30,
-        padding: 0,
-        paddingLeft: 5,
-        paddingRight: 5,
-        marginLeft: 15,
-        marginRight: 15,
-        color: '#000',
+    box: {
+        flexDirection: 'row',
+        height: 70,
+        borderBottomColor: '#ccc',
         borderBottomWidth: 1,
-        backgroundColor: '#fff',
+        margin: 10,
+        padding: 10,
+    },
+
+    actionBox: {
+        flexDirection: 'row',
+        height: 70,
+        borderBottomColor: '#ccc',
+        borderBottomWidth: 1,
+        margin: 10,
+        padding: 10,
+
+        // borderWidth: 1,
+        // borderColor: 'red',
+    },
+
+    textBox: {
+        flex: 6,
+        alignSelf: 'center',
+        fontSize: 18,
+        color: '#000',
     },
 
     button: {
+        flex: 1,
         alignItems: 'center',
-        backgroundColor: '#841584',
+        justifyContent: 'center',
+        //backgroundColor: '#ecf0f1',
         padding: 10,
-        margin: 10,
-        
+        margin: 1,
     },
 
     disabledBtn: {
+        flex: 1,
         alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: '#bbb',
         padding: 10,
-        margin: 10
+        margin: 1
     },
+
+    image: {
+        width: 30, 
+        height: 30
+    },
+
   });
