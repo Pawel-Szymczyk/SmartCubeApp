@@ -12,6 +12,7 @@ export default class AddEditDeviceScreen extends Component {
             areaId: this.params.areaId,
             name: '',
             topic: '',
+            serialNumber: '',
 
             pickerValue: '',
 
@@ -43,6 +44,10 @@ export default class AddEditDeviceScreen extends Component {
 
     handleTopic = (text) => {
         this.setState({ topic: text })
+    }
+
+    handleSerialNumber = (text) => {
+        this.setState({ serialNumber: text })
     }
 
     getRequestBody = () => {
@@ -161,6 +166,12 @@ export default class AddEditDeviceScreen extends Component {
                     <Picker.Item label="Camera" value="camera" />
                     <Picker.Item label="RGB Light" value="rgb" />
                 </Picker>
+
+                <FormLabel style = {styles.label}>Device Serial Number</FormLabel>
+                <TextInput
+                    style = {styles.input}
+                    onChangeText={this.handleSerialNumber}
+                />
                
                 <FormLabel style = {styles.label}>Device Topic</FormLabel>
                 <TextInput

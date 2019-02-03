@@ -106,7 +106,7 @@ export default class RolletScreen extends Component {
         return (
 
             <View style = {styles.container}>
-                <Text style={{paddingTop: 30, paddingLeft: 10}}>Rollet</Text>
+                <Text style={{paddingTop: 30, paddingLeft: 10}}>Rollet Description here</Text>
 
 
 
