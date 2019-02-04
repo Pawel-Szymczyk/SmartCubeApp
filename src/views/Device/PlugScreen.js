@@ -9,32 +9,23 @@ export default class PlugScreen extends Component {
         this.params = this.props.navigation.state.params;
 
         this.state = {
-
           isLoading: true, 
           name: '',
           deviceId: this.params.deviceId,
-          plugBoolValue: false,
-          plugStringValue: '',
           plugData: [],
+          plugState: false,
         };
 
     }
 
     static navigationOptions = ({ navigation }) => {
-
-        
-
       return {
         title: navigation.getParam('deviceName', 'Rollet'),
       };
     };
 
+        // load data from server
     componentDidMount() {
-        this.loadData();
-    }
-
-    // load data from server
-    loadData = () => {
         const {areas, seed, page} = this.state;
         this.setState({ isLoading: true });
  
@@ -44,72 +35,53 @@ export default class PlugScreen extends Component {
             .then(res => {
 
                 this.setState({
-                    plugStringValue: res.powerState
-                })
+                    plugState: res.powerState
+                });
+
             })
             .catch(err => {
                 console.error(err);
             })
-        
-    };
+    }
+
+
 
     // send message to the server
-    plugControl() {
+    plugControl = (value) => {
 
         this.setState({
-            plugBoolValue: !this.state.plugBoolValue,
-        })
-
-        if(this.state.plugBoolValue) {
-            this.setState({
-                plugStringValue: 'on',
-            });
-            
-        } else {
-            this.setState({
-                plugStringValue: 'off',
-            });
-            
-        }
+            plugState: value,
+        });
 
         // post message
         let data = {
-            method: 'POST',
+            method: 'PUT',
             headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              plugId: 2,
-              state: this.state.plugStringValue,
-
-              name: 'plug2',
-              type: 'plug',
-              powerState: this.state.plugStringValue,
-              topic: "/devices/ligh/update",
-              areaId: 1
+                plugId: this.params.deviceObject.id,
+                name: this.params.deviceObject.name,
+                type: this.params.deviceObject.type,
+                powerState: !this.state.plugState,
+                serialNumber: "p0000001",
+                topic: this.params.deviceObject.topic,
+                areaId: this.params.deviceObject.areaId
             })
-          }
+          };
+
+          
   
   
           // add device serial number to url
           fetch('http://192.168.0.17:3000/api/v1/devices/plug', data)
           .then((response) => response.json())
           .then((responseJson) => {
-  
-  
-          //   if(responseJson.state == false) {
-          //     this.setState({
-          //         plugBoolValue: true,
-          //         plugStringValue: 'on'
-          //     });
-          //   }
-          //   else {
-          //     this.setState({
-          //         plugBoolValue: false,
-          //         plugStringValue: 'off'
-          //     });
-          //   }
+
+            this.setState({
+                plugState: responseJson.state
+            });
   
           })
           .catch((error) =>{
@@ -119,10 +91,16 @@ export default class PlugScreen extends Component {
     };
 
 
+    toggleSwitch1 = (value) => {
+        this.setState({switch1Value: value})
+        alert('Switch 1 is: ' + value)
+     }
+
+
 
     render() {
         const { navigation } = this.props;
-
+        
         return (
 
             <View style = {styles.container}>
@@ -131,8 +109,8 @@ export default class PlugScreen extends Component {
                     <Text style={styles.textBox}>State</Text>
                     <Switch
                         style={styles.switchBox}
-                        onValueChange = {() => this.plugControl()}
-                        value = {this.state.plugBoolValue}
+                        onValueChange = {this.plugControl}
+                        value = {this.state.plugState}
                     />
                 </View>
 

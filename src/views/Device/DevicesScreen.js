@@ -91,7 +91,8 @@ export default class DevicesScreen extends Component {
     actionOnRow(item) {
         this.navigate(item.type, {
             deviceId: item.id,
-            deviceName: item.name
+            deviceName: item.name,
+            deviceObject: item
         });
     }
 
