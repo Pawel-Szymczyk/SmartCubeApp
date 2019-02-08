@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import { Platform, StyleSheet, View, Image, TouchableOpacity, Text, FlatList, Dimensions } from 'react-native';
-import { List, ListItem, Button } from 'react-native-elements';
+import { Platform, StyleSheet, View, Image, TouchableOpacity, Text, FlatList, Dimensions, Alert } from 'react-native';
 
 import Logo from "../../components/nav";
 
@@ -26,12 +25,12 @@ export default class HomeScreen extends Component {
       headerTitle: <Logo />,
       headerLeft: (
         <TouchableOpacity onPress={() => navigation.openDrawer()} >
-          <Image source={require('../../images/hamburgerIcon.png')}  style={{width: 30, height: 30}} />
+          <Image source={require('../../images/hamburgerIcon.png')}  style={{width: 30, height: 30, marginLeft: 10}} />
         </TouchableOpacity>
       ),
+      
     };
   };
-
 
 
   handleRefresh = () => {

@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { Button, ThemeProvider } from 'react-native-elements';
 
+import Menu from "../../components/dropDownMenu";
+
 export default class DevicesScreen extends Component {
 
     constructor(props) {
@@ -25,6 +27,7 @@ export default class DevicesScreen extends Component {
     static navigationOptions = ({ navigation }) => {
       return {
         title: navigation.getParam('areaName', 'Devices'),
+        headerRight: <Menu />
       };
     };
 
