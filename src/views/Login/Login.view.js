@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
+import AppContext from '../../components/AppContext';
+
 export default class LoginScreen extends Component {
 
     static navigationOptions = {
@@ -14,6 +16,10 @@ export default class LoginScreen extends Component {
             // username: '',
             // password: ''
         }
+    }
+
+    componentDidMount() {
+        console.log('context', this.context)
     }
 
     render() {
@@ -154,3 +160,6 @@ const styles = StyleSheet.create({
         margin: 10
     }
 });
+
+
+LoginScreen.contextType = AppContext

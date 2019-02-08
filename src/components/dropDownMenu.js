@@ -7,15 +7,16 @@ export default class DropDownMenu extends Component {
 
     render() {
         return (
-            <MenuProvider style={{ flexDirection: "column", paddingLeft: 50,  }}>
+            <View elevation={3}>
+            <MenuProvider style={{ flexDirection: "column"}}>
                 <Menu onSelect={value => alert(`You Clicked : ${value}`)} >
 
                 <MenuTrigger  >
                     <Image source={require('../images/dango.png')}  style={{width: 30, height: 30, marginTop: 15, marginRight: 10 }} />
                 </MenuTrigger  >
 
-                <MenuOptions  optionsContainerStyle={{ marginTop: 50, }}>
-                    <MenuOption value={"Edit"}  customStyles={{optionTouchable: {underlayColor: 'red',activeOpacity: 40,}}}>
+                <MenuOptions  optionsContainerStyle={{ marginTop: 50, zIndex: 99}} >
+                    <MenuOption value={"Edit"}  customStyles={{optionTouchable: {underlayColor: 'red',activeOpacity: 40, zIndex: 99, position: 'absolute'}}}>
                         <Text style={styles.menuContent}>Edit</Text>
                     </MenuOption>
                     <MenuOption value={"Delete"}>
@@ -25,6 +26,7 @@ export default class DropDownMenu extends Component {
 
                 </Menu>
             </MenuProvider>
+            </View>
         );
     }
 

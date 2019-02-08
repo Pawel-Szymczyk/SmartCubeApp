@@ -59,7 +59,8 @@ export default class DevicesScreen extends Component {
         this.setState({ isLoading: true });
  
 
-        fetch('http://192.168.0.17:3000/api/v1/areas/'+ this.params.areaId)
+        //fetch('http://192.168.0.17:3000/api/v1/areas/'+ this.params.areaId)
+        fetch('http://10.128.83.224:3000/api/v1/areas/'+ this.params.areaId)
             .then(res => res.json())
             .then(res => {
 
@@ -108,7 +109,7 @@ export default class DevicesScreen extends Component {
                 data={devices}
                 renderItem={({item}) => (
                   
-                  <View style={styles.boxes}>
+                  <View style={styles.boxes} elevation={1}>
                     <TouchableOpacity 
                       onPress = { () => this.actionOnRow(item)}
                       style={styles.box}
@@ -154,6 +155,8 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      
+      
     },
     boxName: {
       fontSize: 16,

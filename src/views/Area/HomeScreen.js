@@ -1,7 +1,19 @@
 import React, {Component} from 'react';
 import { Platform, StyleSheet, View, Image, TouchableOpacity, Text, FlatList, Dimensions, Alert } from 'react-native';
+import { List, ListItem } from 'react-native-elements'
+import Swipeable from 'react-native-swipeable';
 
 import Logo from "../../components/nav";
+
+
+
+//const leftContent = <Text>Pull to activate</Text>;
+
+const rightButtons = [
+  <TouchableOpacity><Text>Button 1</Text></TouchableOpacity>,
+  <TouchableOpacity><Text>Button 2</Text></TouchableOpacity>
+];
+
 
 
 export default class HomeScreen extends Component {
@@ -59,7 +71,8 @@ export default class HomeScreen extends Component {
     this.setState({ isLoading: true });
 
     // fetch here
-    fetch('http://192.168.0.17:3000/api/v1/areas')
+    // fetch('http://192.168.0.17:3000/api/v1/areas')
+    fetch('http://10.128.83.224:3000/api/v1/areas')
       .then(res => res.json())
       .then(res => {
         this.setState({
@@ -91,32 +104,45 @@ export default class HomeScreen extends Component {
 
   }
 
+  MyListItem = (item) => {
+    // return (
+    //   <View style={styles.boxes}>
+    //     <TouchableOpacity 
+    //       onPress = { () => this.actionOnRow(item)}
+    //       style={styles.box}
+    //     >
+    //       <Text style={styles.boxName}>{item.name}</Text>
+    //       <Text style={styles.boxState}>{item.areaState} </Text>
+    //     </TouchableOpacity> 
+    //   </View>
+    // );
+  }
+
   render() {
     const { areas, isRefreshing } = this.state;
     
     return (
       <View style={styles.scene}>
-        <FlatList 
-          data={areas}
-          renderItem={({item}) => (
-            
-            <View style={styles.boxes}>
-              <TouchableOpacity 
-                onPress = { () => this.actionOnRow(item)}
-                style={styles.box}
-              >
-                <Text style={styles.boxName}>{item.name}</Text>
-                <Text style={styles.boxState}>{item.areaState} </Text>
-              </TouchableOpacity> 
-            </View>
-        )}
-          numColumns={3}
-          keyExtractor={(index) => index.name}
-          refreshing={isRefreshing}
-          onRefresh={this.onRefresh}
-          onEndReached={this.handleLoadMore}
-          onEndThreshold={0}
-        />
+        {
+          this.state.areas.map((item) => {
+          return (
+            <Swipeable rightButtons={rightButtons}>
+              <View>
+                <TouchableOpacity 
+                  onPress = { () => this.actionOnRow(item)}
+                >
+                <ListItem
+                  title={item.name}
+                  subtitle = {item.areaState}
+                  chevronColor={'transparent'}
+                  containerStyle={{height: 80, justifyContent: 'center'}}
+                />
+                </TouchableOpacity> 
+              </View>
+            </Swipeable>
+          )
+          })
+        }
 
         <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addAreaEvent() } style={styles.touchableOpacityStyle} >
           <Image source={require('../../images/addButton.png')}  style={styles.floatingButtonStyle} />
@@ -130,7 +156,7 @@ export default class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   scene: {
-    justifyContent: 'center',
+   // justifyContent: 'center',
     flex: 1,
     backgroundColor: '#fff',
   },

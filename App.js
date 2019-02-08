@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 //import { View, Text, Button } from 'react-native';
 import { createStackNavigator, createAppContainer, createDrawerNavigator } from "react-navigation";
+import AppContext from './src/components/AppContext';
 
 // Routes...
 
@@ -37,8 +38,8 @@ const RootStack = createStackNavigator(
     // header config
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: '#34495e'
-
+        backgroundColor: '#34495e',
+        zIndex: 99,
       },
       headerTintColor: '#fff',
       headerTitleStyle: {
@@ -64,6 +65,35 @@ const AppContainer = createAppContainer(RootDrawer);
 
 export default class App extends Component {
   render() {
-    return <AppContainer />;
+    return (
+      <AppProvider>
+        <AppContainer />
+      </AppProvider>
+    );
+  }
+}
+
+
+class AppProvider extends React.Component {
+
+  constructor(props){
+    super(props)
+
+    this.state = {
+      name:'Konrad',
+      partyId:'123456',
+      isAuthenticated:false,
+      authenticate:() => {
+        this.state.isAuthenticated =  true
+      }
+    }
+  }
+
+  render() {
+    return (
+      <AppContext.Provider value={this.state}>
+        {this.props.children}
+      </AppContext.Provider>
+    )
   }
 }
