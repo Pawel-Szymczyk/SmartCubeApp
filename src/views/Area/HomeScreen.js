@@ -1,20 +1,13 @@
 import React, {Component} from 'react';
 import { Platform, StyleSheet, View, Image, TouchableOpacity, Text, FlatList, Dimensions, Alert } from 'react-native';
-import { List, ListItem } from 'react-native-elements'
+import { List, ListItem, Icon } from 'react-native-elements'
 import Swipeable from 'react-native-swipeable';
 
-import Logo from "../../components/nav";
+import Constants from "../../components/Constants";
 
 
 
-//const leftContent = <Text>Pull to activate</Text>;
-
-const rightButtons = [
-  <TouchableOpacity><Text>Button 1</Text></TouchableOpacity>,
-  <TouchableOpacity><Text>Button 2</Text></TouchableOpacity>
-];
-
-
+let willfocus = null;
 
 export default class HomeScreen extends Component {
 
@@ -31,10 +24,12 @@ export default class HomeScreen extends Component {
     };
   }
 
+  swipeable = null;
+
   // Header
   static navigationOptions = ({navigation}) => {
     return {
-      headerTitle: <Logo />,
+      //headerTitle: <Logo />,
       headerLeft: (
         <TouchableOpacity onPress={() => navigation.openDrawer()} >
           <Image source={require('../../images/hamburgerIcon.png')}  style={{width: 30, height: 30, marginLeft: 10}} />
@@ -63,16 +58,21 @@ export default class HomeScreen extends Component {
   };
 
   componentDidMount() {
-    this.loadAreas();
+    willFocus = this.props.navigation.addListener(
+      'willFocus',
+      payload => {
+       // if (this.state.isLoading) {
+          this.loadAreas();
+       // }
+      }
+    );
   }
 
   loadAreas = () => {
     const {areas, seed, page} = this.state;
     this.setState({ isLoading: true });
-
-    // fetch here
-    // fetch('http://192.168.0.17:3000/api/v1/areas')
-    fetch('http://10.128.83.224:3000/api/v1/areas')
+    
+    fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas')
       .then(res => res.json())
       .then(res => {
         this.setState({
@@ -86,37 +86,24 @@ export default class HomeScreen extends Component {
 
   };
 
-  addAreaEvent() {
+  handleEditArea = () => {
+    alert("lol")
+  }
 
+  addAreaEvent() {
     this.navigate("AddEditArea", {
       name: 'Add Area'
     });
-    
   }
 
   actionOnRow(item) {
-
     this.navigate("Devices", {
       areaId: item.areaId,
-      //devices: item.devices,
       areaName: item.name
     });
-
   }
 
-  MyListItem = (item) => {
-    // return (
-    //   <View style={styles.boxes}>
-    //     <TouchableOpacity 
-    //       onPress = { () => this.actionOnRow(item)}
-    //       style={styles.box}
-    //     >
-    //       <Text style={styles.boxName}>{item.name}</Text>
-    //       <Text style={styles.boxState}>{item.areaState} </Text>
-    //     </TouchableOpacity> 
-    //   </View>
-    // );
-  }
+  
 
   render() {
     const { areas, isRefreshing } = this.state;
@@ -125,22 +112,57 @@ export default class HomeScreen extends Component {
       <View style={styles.scene}>
         {
           this.state.areas.map((item) => {
-          return (
-            <Swipeable rightButtons={rightButtons}>
-              <View>
-                <TouchableOpacity 
-                  onPress = { () => this.actionOnRow(item)}
+            return (
+              <Swipeable 
+                onRef={ref => this.swipeable = ref} 
+                key={item.areaId}
+                rightButtons={[
+                  <TouchableOpacity
+                    onPress={() => alert("lol")}
+                  >
+                    <Icon
+                      //raised
+                      containerStyle={{backgroundColor: '#00a8ff', height: 80, paddingLeft: 30, alignItems: 'flex-start'}}
+                      name='edit'  
+                      type='font-awesome'
+                      color='#fff'
+                      
+                    />
+                  </TouchableOpacity>,
+                  <TouchableOpacity>
+                    <Icon
+                      //raised
+                      containerStyle={{backgroundColor: '#e84118', height: 80, paddingLeft: 30, alignItems: 'flex-start'}}
+                      name='trash'  
+                      type='font-awesome'
+                      color='#fff'
+                    />
+                  </TouchableOpacity>
+                ]} 
+                
                 >
-                <ListItem
-                  title={item.name}
-                  subtitle = {item.areaState}
-                  chevronColor={'transparent'}
-                  containerStyle={{height: 80, justifyContent: 'center'}}
-                />
-                </TouchableOpacity> 
-              </View>
-            </Swipeable>
-          )
+                <View>
+                  <TouchableOpacity 
+                    onPress = { () => this.actionOnRow(item)}
+                  >
+                  <ListItem
+                    leftIcon={
+                      <Icon
+                        raised
+                        name='bed'
+                        type='font-awesome'
+                        color='#f50'
+                      />
+                    }
+                    title={item.name}
+                    subtitle = {item.areaState}
+                    chevronColor={'transparent'}
+                    containerStyle={{height: 80, justifyContent: 'center'}}
+                  />
+                  </TouchableOpacity> 
+                </View>
+              </Swipeable>
+            )
           })
         }
 
@@ -149,8 +171,14 @@ export default class HomeScreen extends Component {
         </TouchableOpacity>
 
       </View>  
+
+
     )
   }
+
+
+
+
 
 }
 

@@ -10,6 +10,8 @@ import SelectScreen from './src/views/Login/Select.view';
 import LoginScreen from './src/views/Login/Login.view';
 import RegistrationScreen from './src/views/Login/Register.view';
 
+import SettingsScreen from './src/views/Settings/SettingsScreen';
+
 import HomeScreen from './src/views/Area/HomeScreen';
 import AddEditAreaScreen from './src/views/Area/AddEditAreaScreen';
 import DevicesScreen from './src/views/Device/DevicesScreen';
@@ -23,6 +25,8 @@ const RootStack = createStackNavigator(
     Login: LoginScreen,
     Registration: RegistrationScreen,
 
+    Settings: SettingsScreen,
+
     Home: HomeScreen,
     AddEditArea: AddEditAreaScreen,
     Devices: DevicesScreen,
@@ -32,8 +36,8 @@ const RootStack = createStackNavigator(
     plug: PlugScreen,
   },
   {
-     initialRouteName: 'Select',
-    //initialRouteName: 'Home',
+     //initialRouteName: 'Select',
+     initialRouteName: 'Home',
 
     // header config
     defaultNavigationOptions: {
@@ -54,6 +58,7 @@ const RootStack = createStackNavigator(
 const RootDrawer = createDrawerNavigator(
   {
     Home: { screen: RootStack, },
+    Settings: {screen: RootStack, },
   },
   {
     initialRouteName: 'Home',

@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { FormLabel, Header} from 'react-native-elements'
+import { FormLabel, Header} from 'react-native-elements';
+
+import Constants from "../../components/Constants";
+
 
 export default class AddEditAreaScreen extends Component {
 
@@ -18,20 +21,24 @@ export default class AddEditAreaScreen extends Component {
 
     // Header
     static navigationOptions = ({navigation}) => {
+        const {params} = navigation.state;
+
         return {
             title: navigation.getParam('name', 'Add / Edit Area'),
             headerRight: (
                 <TouchableOpacity
                     style = {styles.submitButton}
-                    onPress = { () => this.handleSaving() }
+                    onPress = { () => params.handleSave && params.handleSave() }
                 >
                     <Text style = {styles.submitButtonText}> Save </Text>
                 </TouchableOpacity>
-            ),
-        };
+            )
+        }
     };
 
-
+    componentDidMount() {
+        this.props.navigation.setParams({handleSave: () => this.handleSaving()});
+    }
 
     handleName = (text) => {
         this.setState({ name: text })
@@ -59,7 +66,7 @@ export default class AddEditAreaScreen extends Component {
             })
           }
       
-          fetch('http://192.168.0.17:3000/api/v1/areas/create', data)
+        fetch(Constants.SERVER_HTTP_ADDRESS + 'api/v1/areas/create', data)
           .then((res) => res.json())
           .then((res) => {
                 // close this window and open main...
@@ -74,7 +81,6 @@ export default class AddEditAreaScreen extends Component {
         const { navigation } = this.props;
 
         return (
-
 
             <View style = {styles.container}>
 
@@ -95,44 +101,38 @@ export default class AddEditAreaScreen extends Component {
                 />
 
             </View>
-
-
-
-            
         )
     }
+}
 
-
-  }
-
-  const styles = StyleSheet.create({
-    container: {
-        flex: 1
+const styles = StyleSheet.create({
+container: {
+    flex: 1
+},
+label: {
+    fontSize: 20,
+},
+input: {
+    height: 30,
+    padding: 0,
+    paddingLeft: 5,
+    paddingRight: 5,
+    marginLeft: 15,
+    marginRight: 15,
+    color: '#000',
+    borderBottomWidth: 1,
+    backgroundColor: '#fff',
+},
+submitButton: {
+    padding: 10,
+    margin: 15,
+    height: 40,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#fff',
     },
-    label: {
-        fontSize: 20,
-    },
-    input: {
-        height: 30,
-        padding: 0,
-        paddingLeft: 5,
-        paddingRight: 5,
-        marginLeft: 15,
-        marginRight: 15,
-        color: '#000',
-        borderBottomWidth: 1,
-        backgroundColor: '#fff',
-    },
-    submitButton: {
-        padding: 10,
-        margin: 15,
-        height: 40,
-        borderRadius: 6,
-        borderWidth: 1,
-        borderColor: '#fff',
-     },
-     submitButtonText:{
-        color: 'white'
-     }
+    submitButtonText:{
+    color: 'white'
+    }
 
-  });
+});
