@@ -28,11 +28,17 @@ export default class HomeScreen extends Component {
 
   // Header
   static navigationOptions = ({navigation}) => {
+    
     return {
       //headerTitle: <Logo />,
       headerLeft: (
         <TouchableOpacity onPress={() => navigation.openDrawer()} >
-          <Image source={require('../../images/hamburgerIcon.png')}  style={{width: 30, height: 30, marginLeft: 10}} />
+          <Icon
+            iconStyle={{ paddingLeft: 20}}
+            name='bars'  
+            type='font-awesome'
+            color='#fff'
+          />
         </TouchableOpacity>
       ),
       
