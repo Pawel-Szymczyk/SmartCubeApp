@@ -3,7 +3,7 @@ import { ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableO
 
 import Constants from '../../components/Constants';
 
-export default class PasswordScreen extends Component {
+export default class ForgetPasswordScreen extends Component {
 
     static navigationOptions = {
         header: null
@@ -11,53 +11,60 @@ export default class PasswordScreen extends Component {
 
     constructor(props) {
         super(props);
-        this.params = this.props.navigation.state.params;
+
+        
 
         this.state = {
-            userId: this.params.userId,
-            authenticationToken: this.params.authenticationToken,
-            password: '',
-            confirmPassword: ''
+            email: '',
+            secretAnswer: ''
         }
     }
 
-    handlePasswordInput = (text) => {
-        this.setState({ password: text })
+    handleEmailInput = (text) => {
+        this.setState({ email: text })
     }
 
-    handlePassword2Input = (text) => {
-        this.setState({ confirmPassword: text })
+    handleSecretAnswerInput = (text) => {
+        this.setState({ secretAnswer: text })
     }
 
-    handleRegistration = () => {
+    handleForgetPassword = () => {
 
         let status;
 
         let data = {
-            method: 'PUT',
+            method: 'POST',
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              'authenticationToken': 'Bearer ' + this.state.authenticationToken
             },
             body: JSON.stringify({
-                id: this.state.userId,
-                password: this.state.password,
-                confirmPassword: this.state.confirmPassword
+                email: this.state.email,
+                secretAnswer: this.state.secretAnswer
             })
         }
-
-        fetch(Constants.SERVER_HTTP_ADDRESS + '/api/v1/users/newpassword', data)
+        fetch(Constants.SERVER_HTTP_ADDRESS + '/api/v1/users/resetpassword', data)
           .then(response => {
             status = response.status;
             return response.json();
           })
           .then((res) => {
                 if(status === 200) {
-                    this.props.navigation.navigate('Login', {isLoading: true});
+                    //alert(res.authenticationToken)
+                    // set local settings...
+                    //this.setUserObject(res.user);
+                    // close this window and open main...
+                    //onPress = { () => this.actionOnRow(item)}
+                    this.props.navigation.navigate(
+                        'Password', {
+                            isLoading: true, 
+                            userId: res.userId, 
+                            authenticationToken: res.authenticationToken
+                        });
                    // alert("works")
                 } else {
-                    alert(res[0].message)
+                    alert('error here')
+                    //alert(res[0].message)
                 }
           })
           .catch((error) =>{
@@ -72,7 +79,13 @@ export default class PasswordScreen extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.logoContainer}>
+                    
+                    {/* <Image
+                        style={styles.logo}
+                        source={require('../../images/whiteCube.png')}
+                    /> */}
 
+                    
                     <Text>
                         <Text style={styles.title}>cube</Text>
                         <Text style={styles.title2Part}>automation</Text>
@@ -81,38 +94,39 @@ export default class PasswordScreen extends Component {
                 </View>
                 <View style={styles.formContainer}>
 
-                    <Text style={styles.subtitle}>New Password</Text>
+                    <Text style={styles.subtitle}>Forget Password</Text>
+                    {/* <Text>To reset password insert credentials below </Text> */}
 
                     <TextInput
                         style={styles.input}
-                        placeholder = 'Password'
+                        placeholder = 'Email'
                         placeholderTextColor='rgba(255,255,255,0.7)'
                         returnKeyType="next"
-                        onSubmitEditing={() => this.passwordInput2.focus()}
+                        onSubmitEditing={() => this.secretAnswerInput.focus()}
+                        keyboardType='email-address'
                         autoCapitalize='none'
                         autoCorrect={false}
-                        ref={(input) => this.passwordInput = input}
-                        onChangeText={this.handlePasswordInput}
-                        secureTextEntry
+                        ref={(input) => this.email = input}
+                        onChangeText={this.handleEmailInput}
                     />
-
+                    
                     <TextInput
                         style={styles.input}
-                        placeholder = 'Repeat Password'
+                        placeholder = 'Secret Key'
                         placeholderTextColor='rgba(255,255,255,0.7)'
                         returnKeyType="go"
+                        keyboardType='default'
                         autoCapitalize='none'
                         autoCorrect={false}
-                        ref={(input) => this.passwordInput2 = input}
-                        onChangeText={this.handlePassword2Input}
-                        secureTextEntry
+                        ref={(input) => this.secretAnswerInput = input}
+                        onChangeText={this.handleSecretAnswerInput}
                     />
                     
                     <TouchableOpacity 
                         style={styles.buttonContainer}
-                        onPress = { () => this.handleRegistration() }
+                        onPress = { () => this.handleForgetPassword() }
                     >
-                        <Text style={styles.buttonText}>Reset Password</Text>
+                        <Text style={styles.buttonText}>Send</Text>
                     </TouchableOpacity>
 
                 </View>

@@ -8,6 +8,8 @@ import AppContext from './src/components/AppContext';
 import SelectScreen from './src/views/Login/Select.view';
 import LoginScreen from './src/views/Login/Login.view';
 import RegistrationScreen from './src/views/Login/Register.view';
+import ForgetPasswordScreen from './src/views/Login/ForgetPassword.view';
+import PasswordScreen from './src/views/Login/Password.view';
 import SettingsScreen from './src/views/Settings/SettingsScreen';
 import HomeScreen from './src/views/Area/HomeScreen';
 import AddEditAreaScreen from './src/views/Area/AddEditAreaScreen';
@@ -21,6 +23,8 @@ const RootStack = createStackNavigator(
     Select: SelectScreen,
     Login: LoginScreen,
     Registration: RegistrationScreen,
+    ForgetPassword: ForgetPasswordScreen,
+    Password: PasswordScreen,
     Settings: SettingsScreen,
     Home: HomeScreen,
     AddEditArea: AddEditAreaScreen,
@@ -31,8 +35,8 @@ const RootStack = createStackNavigator(
     plug: PlugScreen,
   },
   {
-     //initialRouteName: 'Select',
-     initialRouteName: 'Home',
+     initialRouteName: 'Select',
+    // initialRouteName: 'Home',
 
     // header config
     defaultNavigationOptions: {
@@ -96,11 +100,14 @@ class AppProvider extends React.Component {
     super(props)
 
     this.state = {
-      name:'Konrad',
-      partyId:'123456',
+      user: {},
+
+      // authenticationToken: '',
+      // name:'Konrad',
+      // partyId:'123456',
       isAuthenticated:false,
-      authenticate:() => {
-        this.state.isAuthenticated =  true
+      authenticate:(user) => {
+        this.state.user =  user
       }
     }
   }

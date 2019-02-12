@@ -3,6 +3,7 @@ import { Platform, StyleSheet, View, Image, TouchableOpacity, Text, FlatList, Di
 import { List, ListItem, Icon } from 'react-native-elements'
 import Swipeable from 'react-native-swipeable';
 
+import AppContext from '../../components/AppContext';
 import Constants from "../../components/Constants";
 
 
@@ -78,7 +79,13 @@ export default class HomeScreen extends Component {
     const {areas, seed, page} = this.state;
     this.setState({ isLoading: true });
     
-    fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas')
+    fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas', {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+      },
+    })
       .then(res => res.json())
       .then(res => {
         this.setState({
@@ -113,7 +120,7 @@ export default class HomeScreen extends Component {
 
   render() {
     const { areas, isRefreshing } = this.state;
-    
+    alert(this.context.user.name);
     return (
       <View style={styles.scene}>
         {
@@ -230,3 +237,5 @@ const styles = StyleSheet.create({
     height: 50,
   },
 });
+
+HomeScreen.contextType = AppContext

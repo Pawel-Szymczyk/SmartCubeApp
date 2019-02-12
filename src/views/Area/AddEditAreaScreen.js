@@ -97,7 +97,7 @@ export default class AddEditAreaScreen extends Component {
                 <FormLabel style = {styles.label}>Area State</FormLabel>
                 <TextInput
                     style = {styles.input}
-                    onChangeText={this.handleAreaState}
+                    onChangeText={this.handleAreaState} 
                 />
 
             </View>

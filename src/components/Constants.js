@@ -9,5 +9,5 @@ export default {
     // },
     SERVER_IP: '192.168.0.23',
     PORT: '3000',
-    SERVER_HTTP_ADDRESS: 'http://192.168.0.23:3000/',
+    SERVER_HTTP_ADDRESS: 'http://192.168.0.23:3000',
   };

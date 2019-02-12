@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
+import Constants from '../../components/Constants';
+
 export default class RegistrationScreen extends Component {
 
     static navigationOptions = {
@@ -11,9 +13,88 @@ export default class RegistrationScreen extends Component {
         super(props);
 
         this.state = {
-            // username: '',
-            // password: ''
+            firstName: '',
+            lastName: '',
+            email: '',
+            username: '',
+            secretAnswer: '',
+            password: '',
+            confirmPassword: ''
         }
+    }
+
+    handleFirstNameInput = (text) => {
+        this.setState({ firstName: text })
+    }
+
+    handleLastNameInput = (text) => {
+        this.setState({ lastName: text })
+    }
+
+    handleEmailInput = (text) => {
+        this.setState({ email: text })
+    }
+
+    handleUsernameInput = (text) => {
+        this.setState({ username: text })
+    }
+
+    handleSecretKeyInput = (text) => {
+        this.setState({ secretAnswer: text })
+    }
+
+    handlePasswordInput = (text) => {
+        this.setState({ password: text })
+    }
+
+    handlePassword2Input = (text) => {
+        this.setState({ confirmPassword: text })
+    }
+
+    handleRegistration = () => {
+
+        let status;
+
+        let data = {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                firstName: this.state.firstName,
+                lastName: this.state.lastName,
+                email: this.state.email,
+                username: this.state.username,
+                secretAnswer: this.state.secretAnswer,
+                password: this.state.password,
+                confirmPassword: this.state.confirmPassword
+            })
+        }
+
+        //alert(data.body)
+        
+        fetch(Constants.SERVER_HTTP_ADDRESS + '/api/v1/users/registration', data)
+          .then(response => {
+            status = response.status;
+            return response.json();
+          })
+          .then((res) => {
+                if(status === 200) {
+                    // set local settings...
+                    //this.setUserObject(res.user);
+                    // close this window and open main...
+                    this.props.navigation.navigate('Login', {isLoading: true});
+                   // alert("works")
+                } else {
+                    alert(res[0].message)
+                }
+          })
+          .catch((error) =>{
+            //console.error(error);
+            alert(error);
+          });
+
     }
 
     render() {
@@ -47,7 +128,7 @@ export default class RegistrationScreen extends Component {
                         keyboardType='default'
                         autoCapitalize='words'
                         autoCorrect={false}
-                        // onChangeText={(username) => this.setState({username})}
+                        onChangeText={this.handleFirstNameInput}
                     />
 
                     <TextInput
@@ -60,7 +141,7 @@ export default class RegistrationScreen extends Component {
                         autoCapitalize='words'
                         autoCorrect={false}
                         ref={(input) => this.lastName = input}
-                        // onChangeText={(username) => this.setState({username})}
+                        onChangeText={this.handleLastNameInput}
                     />
 
                     <TextInput
@@ -73,7 +154,7 @@ export default class RegistrationScreen extends Component {
                         autoCapitalize='none'
                         autoCorrect={false}
                         ref={(input) => this.email = input}
-                        // onChangeText={(username) => this.setState({username})}
+                        onChangeText={this.handleEmailInput}
                     />
 
                     <TextInput
@@ -81,12 +162,25 @@ export default class RegistrationScreen extends Component {
                         placeholder = 'Username'
                         placeholderTextColor='rgba(255,255,255,0.7)'
                         returnKeyType="next"
-                        onSubmitEditing={() => this.passwordInput.focus()}
+                        onSubmitEditing={() => this.secretKeyInput.focus()}
                         keyboardType='default'
                         autoCapitalize='words'
                         autoCorrect={false}
                         ref={(input) => this.usernameInput = input}
-                        // onChangeText={(username) => this.setState({username})}
+                        onChangeText={this.handleUsernameInput}
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder = 'Secret Key'
+                        placeholderTextColor='rgba(255,255,255,0.7)'
+                        returnKeyType="next"
+                        onSubmitEditing={() => this.passwordInput.focus()}
+                        keyboardType='default'
+                        autoCapitalize='none'
+                        autoCorrect={false}
+                        ref={(input) => this.secretKeyInput = input}
+                        onChangeText={this.handleSecretKeyInput}
                     />
 
                     <TextInput
@@ -98,8 +192,8 @@ export default class RegistrationScreen extends Component {
                         autoCapitalize='none'
                         autoCorrect={false}
                         ref={(input) => this.passwordInput = input}
+                        onChangeText={this.handlePasswordInput}
                         secureTextEntry
-                        // onChangeText={(password) => this.setState({password})}
                     />
 
                     <TextInput
@@ -110,11 +204,14 @@ export default class RegistrationScreen extends Component {
                         autoCapitalize='none'
                         autoCorrect={false}
                         ref={(input) => this.passwordInput2 = input}
+                        onChangeText={this.handlePassword2Input}
                         secureTextEntry
-                        // onChangeText={(password) => this.setState({password})}
                     />
                     
-                    <TouchableOpacity style={styles.buttonContainer}>
+                    <TouchableOpacity 
+                        style={styles.buttonContainer}
+                        onPress = { () => this.handleRegistration() }
+                    >
                         <Text style={styles.buttonText}>Create Account</Text>
                     </TouchableOpacity>
 
@@ -191,7 +288,7 @@ const styles = StyleSheet.create({
         borderRadius: 7,
         paddingVertical: 10,
         width: 260,
-        marginTop: 40,
+        marginTop: 10,
         marginBottom: 15,
         alignSelf: 'center',
     },

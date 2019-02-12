@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
 import AppContext from '../../components/AppContext';
+import Constants from '../../components/Constants';
 
 export default class LoginScreen extends Component {
 
@@ -13,14 +14,72 @@ export default class LoginScreen extends Component {
         super(props);
 
         this.state = {
-            // username: '',
-            // password: ''
+            username: '',
+            password: ''
         }
+    }
+
+    handleUsernameInput = (text) => {
+        this.setState({ username: text })
+    }
+
+    handlePasswordInput = (text) => {
+        this.setState({ password: text })
     }
 
     componentDidMount() {
         console.log('context', this.context)
     }
+
+    // Set app context object...
+    setUserObject = (obj) => {
+        this.context.authenticate(obj);
+    }
+
+    handleLogin = () => {
+
+        let status;
+
+        let data = {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              // set this token to local db
+              'authorizationToken': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImZvcm0iOiJtb2JpbGVhcHAiLCJ1c2VybmFtZSI6InBhd2VsIiwidXNlclR5cGUiOiJ1c2VyIiwiaXNWYWxpZCI6InRydWUifSwiaWF0IjoxNTQ5ODk1MDk1fQ.z01tbMoPFLvTZAhGcPPxisEV8zChR5h0KYPrC34pYOI'
+            },
+            body: JSON.stringify({
+              username: this.state.username,
+              password: this.state.password,
+            })
+        }
+        
+        fetch(Constants.SERVER_HTTP_ADDRESS + '/api/v1/users/login', data)
+          .then(response => {
+            status = response.status;
+            return response.json();
+          })
+          .then((res) => {
+                if(status === 200) {
+                    // set local settings...
+                    this.setUserObject(res.user);
+                    // close this window and open main...
+                    this.props.navigation.navigate('Home', {isLoading: true});
+                } else {
+                    this.props.navigation.navigate('Login', {isLoading: true});
+                    alert(res.message)
+                }
+          })
+          .catch((error) =>{
+            //console.error(error);
+            alert(error);
+          });
+    }
+
+    handleForgetPassword = () => {
+        this.props.navigation.navigate('ForgetPassword', {isLoading: true});
+    }
+
 
     render() {
         const {navigate} = this.props.navigation;
@@ -53,7 +112,7 @@ export default class LoginScreen extends Component {
                             keyboardType='email-address'
                             autoCapitalize='none'
                             autoCorrect={false}
-                            // onChangeText={(username) => this.setState({username})}
+                            onChangeText={this.handleUsernameInput}
                         />
                         <TextInput
                             style={styles.input}
@@ -64,17 +123,19 @@ export default class LoginScreen extends Component {
                             autoCorrect={false}
                             ref={(input) => this.passwordInput = input}
                             secureTextEntry
-                            // onChangeText={(password) => this.setState({password})}
+                            onChangeText={this.handlePasswordInput}
                         />
                         
                         <TouchableOpacity 
                             style={styles.buttonContainer}
-                            onPress = { () => navigate('Home') }
+                            onPress = { () => this.handleLogin() }
                         >
                             <Text style={styles.buttonText}>Sign In</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress = { () => this.handleForgetPassword() }
+                        >
                             <Text style={styles.labelText}>Forgot Password?</Text>
                         </TouchableOpacity>
 
