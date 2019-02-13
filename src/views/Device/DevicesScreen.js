@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
-import { Button, ThemeProvider, Icon } from 'react-native-elements';
+import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { ListItem, Icon } from 'react-native-elements';
+import Swipeable from 'react-native-swipeable';
 
 import AppContext from '../../components/AppContext';
 import Constants from "../../components/Constants";
@@ -16,13 +17,8 @@ export default class DevicesScreen extends Component {
         
         this.state = {
             areaId: this.params.areaId,
-            seed: 1,
-            page: 1,
-
             devices: [],
-
             isLoading: false,
-            isRefreshing: false,
         };
     }
 
@@ -32,25 +28,9 @@ export default class DevicesScreen extends Component {
       };
     };
 
-
-
-    // handleRefresh = () => {
-    //     this.setState({
-    //       seed: this.state.seed + 1,
-    //       isRefreshing: true,
-    //     }, () => {
-    //       this.loadDevices();
-    //     });
-    //   };
+    swipeable = null;
     
-    // handleLoadMore = () => {
-    //     this.setState({
-    //         page: this.state.page + 1,
-    //     }, () => {
-    //         this.loadDevices();
-    //     });
-    // };
-    
+    // Quick item loads after reload page
     componentDidMount() {
       willFocus = this.props.navigation.addListener(
         'willFocus',
@@ -63,7 +43,6 @@ export default class DevicesScreen extends Component {
     }
     
     loadDevices = () => {
-        const {areas, seed, page} = this.state;
         this.setState({ isLoading: true });
  
         fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas/' + this.params.areaId, {
@@ -75,9 +54,6 @@ export default class DevicesScreen extends Component {
         })
         .then(res => res.json())
         .then(res => {
-
-            // check if obj is empty
-            // if (this.state.acessos && this.state.acessos.length) {}
 
             var devicesList = [];
             devicesList = devicesList.concat(res.area.rollets);
@@ -93,7 +69,10 @@ export default class DevicesScreen extends Component {
         })
     };
 
-    addDeviceEvent() {
+    handleEditDevice() {
+
+    }
+    handleAddDevice() {
       this.navigate("AddEditDevice", {
         name: 'Add Device',
         areaId: this.state.areaId
@@ -113,46 +92,78 @@ export default class DevicesScreen extends Component {
         const { devices, isRefreshing } = this.state;
         return (
           <View style={styles.scene}>
-            <FlatList 
-              data={devices}
-              renderItem={({item}) => (
-                
-                <View style={styles.boxes} elevation={1}>
-                  <TouchableOpacity 
-                    onPress = { () => this.actionOnRow(item)}
-                    style={styles.box}
+            {
+              this.state.devices.map((item) => {
+                return (
+                  <Swipeable
+                    onRef={ref => this.swipeable = ref} 
+                    key={item.deviceId}
+                    rightButtons={[
+                      <TouchableOpacity
+                        onPress={() => this.handleEditDevice()}
+                      >
+                        <Icon
+                          //raised
+                          containerStyle={{backgroundColor: '#00a8ff', height: 80, paddingLeft: 30, alignItems: 'flex-start'}}
+                          name='edit'  
+                          type='font-awesome'
+                          color='#fff'
+                          
+                        />
+                      </TouchableOpacity>,
+                      <TouchableOpacity>
+                        <Icon
+                          //raised
+                          containerStyle={{backgroundColor: '#e84118', height: 80, paddingLeft: 30, alignItems: 'flex-start'}}
+                          name='trash'    
+                          type='font-awesome'
+                          color='#fff'
+                        />
+                      </TouchableOpacity>
+                    ]} 
                   >
-                    <Text style={styles.boxName}>{item.name}</Text>
-                    <Text style={styles.boxState}>{item.powerState} </Text>
-                  </TouchableOpacity> 
-                </View>
-            )}
-              numColumns={3}
-              keyExtractor={(index) => index.name}
-              refreshing={isRefreshing}
-              onRefresh={this.onRefresh}
-              onEndReached={this.handleLoadMore}
-              onEndThreshold={0}
-            />
-    
-            <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addDeviceEvent() } style={styles.touchableOpacityStyle} >
-              {/* <Image source={require('../../images/addButton.png')}  style={styles.floatingButtonStyle} /> */}
+                    <View>
+                      <TouchableOpacity 
+                        onPress = { () => this.actionOnRow(item)}
+                      >
+                        <ListItem
+                          leftIcon={
+                            <Icon
+                              //raised
+                              containerStyle={{padding: 10}}
+                              name='bed'
+                              type='font-awesome'
+                              color='#f50'
+                            />
+                          }
+                          title={item.name}
+                          subtitle = {item.powerState}
+                          chevronColor={'transparent'}
+                          containerStyle={{height: 80, justifyContent: 'center'}}
+                        />
+                      </TouchableOpacity> 
+                    </View>
+                  </Swipeable>
+                )
+              })
+            }
+
+            <TouchableOpacity activeOpacity={0.5} onPress={ () => this.handleAddDevice() } style={styles.touchableOpacityStyle} >
               <Icon
                 iconStyle={{fontSize: 40}}
                 name='plus-square'  
                 type='font-awesome'
                 color='#34495e'
               />
-            </TouchableOpacity>
-    
+            </TouchableOpacity>    
           </View>  
         )
     }
 }
 
 const styles = StyleSheet.create({
+
     scene: {
-      justifyContent: 'center',
       flex: 1,
       backgroundColor: '#fff',
     },

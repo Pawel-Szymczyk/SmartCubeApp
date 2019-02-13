@@ -49,7 +49,7 @@ export default class PasswordScreen extends Component {
             })
         }
 
-        fetch(Constants.SERVER_HTTP_ADDRESS + '/api/v1/users/newpassword', data)
+        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/users/newpassword', data)
           .then(response => {
             status = response.status;
             return response.json();

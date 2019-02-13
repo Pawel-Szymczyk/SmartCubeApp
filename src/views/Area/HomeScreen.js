@@ -19,7 +19,6 @@ export default class HomeScreen extends Component {
       page: 1,
       areas: [],
       isLoading: false,
-      isRefreshing: false,
     };
   }
 
@@ -102,7 +101,7 @@ export default class HomeScreen extends Component {
     });
   }
 
-  addAreaEvent() {
+  handleAddArea() {
     this.navigate("AddEditArea", {
       name: 'Add Area'
     });
@@ -118,7 +117,7 @@ export default class HomeScreen extends Component {
   
 
   render() {
-    const { areas, isRefreshing } = this.state;
+    const { areas } = this.state;
     //alert(this.context.user.authenticationToken);
     return (
       <View style={styles.scene}>
@@ -178,7 +177,7 @@ export default class HomeScreen extends Component {
           })
         }
 
-        <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addAreaEvent() } style={styles.touchableOpacityStyle} >
+        <TouchableOpacity activeOpacity={0.5} onPress={ () => this.handleAddArea() } style={styles.touchableOpacityStyle} >
           <Icon
             iconStyle={{fontSize: 40}}
             name='plus-square'  

@@ -43,7 +43,7 @@ export default class ForgetPasswordScreen extends Component {
                 secretAnswer: this.state.secretAnswer
             })
         }
-        fetch(Constants.SERVER_HTTP_ADDRESS + '/api/v1/users/resetpassword', data)
+        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/users/resetpassword', data)
           .then(response => {
             status = response.status;
             return response.json();
@@ -58,7 +58,6 @@ export default class ForgetPasswordScreen extends Component {
                         });
                 } else {
                     alert('error here')
-                    //alert(res[0].message)
                 }
           })
           .catch((error) =>{
@@ -74,16 +73,10 @@ export default class ForgetPasswordScreen extends Component {
             <View style={styles.container}>
                 <View style={styles.logoContainer}>
                     
-                    {/* <Image
-                        style={styles.logo}
-                        source={require('../../images/whiteCube.png')}
-                    /> */}
-
-                    
-                    <Text>
-                        <Text style={styles.title}>cube</Text>
-                        <Text style={styles.title2Part}>automation</Text>
-                    </Text>
+                    <Image
+                        style={styles.logoText}
+                        source={require('../../images/textLogo.png')}
+                    />
                     
                 </View>
                 <View style={styles.formContainer}>
@@ -131,15 +124,6 @@ export default class ForgetPasswordScreen extends Component {
 
 
 const styles = StyleSheet.create({
-    // backgoundImg: {
-    //     flex: 1,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     width: Dimensions.get('window').width,
-    //     height: Dimensions.get('window').height,
-    //     //  opacity: 0.5
-    //    // resizeMode: 'stretch',
-    // },
     container: {
         flex: 1,
         backgroundColor: '#34495e',
@@ -151,25 +135,11 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         justifyContent: 'center',
     },
-    logo: {
-        width: 90,
-        height: 90,
-    },
-    title: {
-        fontSize: 28,
-        color: '#fff',
-        marginTop: 10,
-        textAlign: 'center',
-    },
-    title2Part: {
-        fontSize: 30,
-        color: '#fff',
-        marginTop: 10,
-        textAlign: 'center',
-        fontWeight: 'bold'
+    logoText: {
+        width: 300, 
+        height: 90
     },
     formContainer: {
-        // flex: 1,
        flexGrow: 2,
     },
     subtitle: {

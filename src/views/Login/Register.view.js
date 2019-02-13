@@ -84,7 +84,7 @@ export default class RegistrationScreen extends Component {
 
         //alert(data.body)
         
-        fetch(Constants.SERVER_HTTP_ADDRESS + '/api/v1/users/registration', data)
+        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/users/registration', data)
           .then(response => {
             status = response.status;
             return response.json();
@@ -114,18 +114,10 @@ export default class RegistrationScreen extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.logoContainer}>
-                    
-                    {/* <Image
-                        style={styles.logo}
-                        source={require('../../images/whiteCube.png')}
-                    /> */}
-
-                    
-                    <Text>
-                        <Text style={styles.title}>cube</Text>
-                        <Text style={styles.title2Part}>automation</Text>
-                    </Text>
-                    
+                    <Image
+                        style={styles.logoText}
+                        source={require('../../images/textLogo.png')}
+                    />
                 </View>
                 <View style={styles.formContainer}>
 
@@ -235,20 +227,9 @@ export default class RegistrationScreen extends Component {
 
 
 const styles = StyleSheet.create({
-    // backgoundImg: {
-    //     flex: 1,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     width: Dimensions.get('window').width,
-    //     height: Dimensions.get('window').height,
-    //     //  opacity: 0.5
-    //    // resizeMode: 'stretch',
-    // },
     container: {
         flex: 1,
         backgroundColor: '#34495e',
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
     },
     logoContainer: {
         alignItems: 'center',
@@ -259,30 +240,19 @@ const styles = StyleSheet.create({
         width: 90,
         height: 90,
     },
-    title: {
-        fontSize: 28,
-        color: '#fff',
-        marginTop: 10,
-        textAlign: 'center',
-    },
-    title2Part: {
-        fontSize: 30,
-        color: '#fff',
-        marginTop: 10,
-        textAlign: 'center',
-        fontWeight: 'bold'
+    logoText: {
+        width: 220, 
+        height: 30,
     },
     formContainer: {
-        // flex: 1,
        flexGrow: 2,
     },
     subtitle: {
         fontSize: 22,
         color: '#fff',
-        marginTop: 10,
-        marginBottom: 30,
+        marginTop: 50,
+        marginBottom: 10,
         textAlign: 'center',
-        
     },
     input: {
         height: 40,
@@ -291,7 +261,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         color: '#FFF',
         paddingHorizontal: 10,
-        width: 250,
+        width: '60%',
         alignSelf: 'center',
     },
     buttonContainer: {

@@ -25,10 +25,10 @@ export default class SelectScreen extends Component {
                             source={require('../../images/whiteCube.png')}
                         />
 
-                        <Text>
-                            <Text style={styles.title}>cube</Text>
-                            <Text style={styles.title2Part}>automation</Text>
-                        </Text>
+                        <Image
+                            style={styles.logoText}
+                            source={require('../../images/textLogo.png')}
+                        />
 
                     </View>
 
@@ -60,38 +60,24 @@ const styles = StyleSheet.create({
     backgoundImg: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
     },
     container: {
-        flex: 2,
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
-        backgroundColor: 'rgba(52, 73, 94, .5)'
+        flex: 1,
+        backgroundColor: 'rgba(52, 73, 94, .5)',
     },
     logoContainer: {
-        flex: 99,
+        flex: 1,
+        flexGrow: 2,
         alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 60,
+        justifyContent: 'flex-end',
     },
     logo: {
         width: 90,
         height: 90,
     },
-    title: {
-        fontSize: 28,
-        color: '#fff',
-        marginTop: 10,
-        textAlign: 'center',
-    },
-    title2Part: {
-        fontSize: 30,
-        color: '#fff',
-        marginTop: 10,
-        textAlign: 'center',
-        fontWeight: 'bold'
+    logoText: {
+        width: 300, 
+        height: 90
     },
     formContainer: {
         alignSelf: 'center',

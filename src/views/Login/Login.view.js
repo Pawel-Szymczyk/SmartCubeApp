@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {AsyncStorage, ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { AsyncStorage, ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, ImageBackground } from 'react-native';
+import { CheckBox } from 'react-native-elements'
 
 import AppContext from '../../components/AppContext';
 import Constants from '../../components/Constants';
@@ -16,7 +17,8 @@ export default class LoginScreen extends Component {
         this.state = {
             username: '',
             password: '',
-            authorizationToken: ''
+            authorizationToken: '',
+            checked: false
         }
     }
 
@@ -31,6 +33,7 @@ export default class LoginScreen extends Component {
     componentDidMount() {
        // console.log('context', this.context)
         this.getAuthorizationToken();
+        this.getLoginCredentials();
     }
 
     // Set app context object...
@@ -53,7 +56,53 @@ export default class LoginScreen extends Component {
         return
       };
 
+    storeLoginCredentials = async(username, password, isChecked) => {
+        let obj = {
+            username: username,
+            password: password,
+            isChecked: isChecked
+        }
+
+        try {
+            await AsyncStorage.setItem('loginDetails', JSON.stringify(obj));
+            // TODO: convert this to store array, that allows to recognize who is trying to login in 
+         } catch (error) {
+           // Error retrieving data
+           console.log(error.message);
+         }
+    }
+
+    getLoginCredentials = async() => {
+        try {
+            let loginDetails = await AsyncStorage.getItem('loginDetails');
+            let parsed = JSON.parse(loginDetails);
+            this.setState({
+             username: parsed.username,
+             password: parsed.password,
+             checked: parsed.isChecked
+            })
+         } catch (error) {
+           // Error retrieving data
+           console.log(error.message);
+         }
+         return
+    }
+
+    // if 'Remeber Login' is checked allow to insert automatically credentials otherwise remove from async storage
+    checkValidation = async() => {
+        if(this.state.checked) {
+            this.storeLoginCredentials(this.state.username, this.state.password, this.state.checked);
+        } else {
+            let value = await AsyncStorage.getItem('loginDetails');
+            if(value !== null) {
+                AsyncStorage.removeItem('loginDetails');
+            }
+        }
+    }
+
     handleLogin = () => {
+
+        this.checkValidation();
 
         let status;
 
@@ -72,7 +121,7 @@ export default class LoginScreen extends Component {
             })
         }
         
-        fetch(Constants.SERVER_HTTP_ADDRESS + '/api/v1/users/login', data)
+        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/users/login', data)
           .then(response => {
             status = response.status;
             return response.json();
@@ -98,6 +147,10 @@ export default class LoginScreen extends Component {
         this.props.navigation.navigate('ForgetPassword', {isLoading: true});
     }
 
+    handleCheckBox = () => {
+        this.setState({checked: !this.state.checked})
+    }
+
 
     render() {
         const {navigate} = this.props.navigation;
@@ -112,11 +165,10 @@ export default class LoginScreen extends Component {
                             source={require('../../images/whiteCube.png')}
                         />
 
-                        <Text>
-                            <Text style={styles.title}>cube</Text>
-                            <Text style={styles.title2Part}>automation</Text>
-                        </Text>
-
+                        <Image
+                            style={styles.logoText}
+                            source={require('../../images/textLogo.png')}
+                        />
                     </View>
 
                     <View style={styles.formContainer}>
@@ -131,6 +183,7 @@ export default class LoginScreen extends Component {
                             autoCapitalize='none'
                             autoCorrect={false}
                             onChangeText={this.handleUsernameInput}
+                            value={this.state.username}
                         />
                         <TextInput
                             style={styles.input}
@@ -142,8 +195,18 @@ export default class LoginScreen extends Component {
                             ref={(input) => this.passwordInput = input}
                             secureTextEntry
                             onChangeText={this.handlePasswordInput}
+                            value={this.state.password}
                         />
-                        
+
+                        <CheckBox
+                            containerStyle={{backgroundColor: 'transparent', color: '#fff', marginBottom: 15, borderWidth: 0}}
+                            center
+                            textStyle={{color: '#fff'}}
+                            title='Remeber Login'
+                            checked={this.state.checked}
+                            onPress={() => this.handleCheckBox()}
+                        />
+
                         <TouchableOpacity 
                             style={styles.buttonContainer}
                             onPress = { () => this.handleLogin() }
@@ -169,19 +232,14 @@ const styles = StyleSheet.create({
     backgoundImg: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
     },
     container: {
-        flex: 2,
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height,
-        backgroundColor: 'rgba(52, 73, 94,.5)'
+        flex: 1,
+        backgroundColor: 'rgba(52, 73, 94,.5)',
     },
     logoContainer: {
+        flex: 1,
        alignItems: 'center',
-       flexGrow: 2,
        justifyContent: 'flex-end',
        paddingBottom: 65,
     },
@@ -189,18 +247,9 @@ const styles = StyleSheet.create({
         width: 90,
         height: 90,
     },
-    title: {
-        fontSize: 28,
-        color: '#fff',
-        marginTop: 10,
-        textAlign: 'center',
-    },
-    title2Part: {
-        fontSize: 30,
-        color: '#fff',
-        marginTop: 10,
-        textAlign: 'center',
-        fontWeight: 'bold'
+    logoText: {
+        width: 300, 
+        height: 90
     },
     formContainer: {
         padding: 20,
