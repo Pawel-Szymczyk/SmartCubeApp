@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Picker} from 'react-native';
 import { FormLabel, Input} from 'react-native-elements';
 
+import Constants from "../../components/Constants";
+import AppContext from '../../components/AppContext';
+
 export default class AddEditDeviceScreen extends Component {
 
     constructor(props) {
@@ -22,12 +25,15 @@ export default class AddEditDeviceScreen extends Component {
 
     // Header
     static navigationOptions = ({navigation}) => {
+        const {params} = navigation.state;
+
         return {
             title: navigation.getParam('name', 'Add / Edit Device'),
             headerRight: (
                 <TouchableOpacity
                     style = {styles.submitButton}
-                    onPress = { () => this.handleSaving() }
+                    //onPress = { () => this.handleSaving() }
+                    onPress = { () => params.handleSave && params.handleSave() }
                 >
                     <Text style = {styles.submitButtonText}> Save </Text>
                 </TouchableOpacity>
@@ -35,8 +41,9 @@ export default class AddEditDeviceScreen extends Component {
         };
     };
 
-
-
+    componentDidMount() {
+        this.props.navigation.setParams({handleSave: () => this.handleSaving()});
+    }
 
     handleName = (text) => {
         this.setState({ name: text })
@@ -51,7 +58,6 @@ export default class AddEditDeviceScreen extends Component {
     }
 
     getRequestBody = () => {
-      //  alert("Selected value is: " + this.state.pickerValue);
 
         // Note: first selection is rollet but it is empty!
         switch(this.state.pickerValue) {
@@ -87,44 +93,26 @@ export default class AddEditDeviceScreen extends Component {
 
     handleSaving = () => {
 
-      //  let selectedBody = this.getSelectedPickerValue();
-
-        // let data = {
-        //     method: 'POST',
-        //     headers: {
-        //       Accept: 'application/json',
-        //       'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //       name: this.state.name,
-        //       powerState: "off",
-        //       deviceActionState: "stop",
-        //       topic: this.state.topic,
-        //       areaId: this.state.areaId
-        //     })
-        //   }
-
         let data = {
             method: 'POST',
             headers: {
               Accept: 'application/json',
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
             },
             body: this.getRequestBody()
           }
 
+          fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/' + this.state.pickerValue + '/create', data)
+          .then((res) => res.json())
+          .then((res) => {
+                // close this window and open main...
+                this.props.navigation.navigate('Devices', {isLoading: true});
+          })
+          .catch((error) =>{
+            console.error(error);
+          });
 
-      
-        //fetch('http://192.168.0.17:3000/api/v1/devices/create', data)
-        // fetch('http://192.168.0.17:3000/api/v1/devices/' + this.state.pickerValue + '/create', data)
-        //   .then((res) => res.json())
-        //   .then((res) => {
-        //         // close this window and open main...
-        //         this.props.navigation.navigate('Devices', {isLoading: true});
-        //   })
-        //   .catch((error) =>{
-        //     console.error(error);
-        //   });
     }
 
     handlePickerOption = (value) => {
@@ -142,7 +130,6 @@ export default class AddEditDeviceScreen extends Component {
         return (
             <View style = {styles.container}>
 
-
                 <FormLabel style = {styles.label}>Device Name</FormLabel>
                 <TextInput
                     style = {styles.input}
@@ -156,7 +143,6 @@ export default class AddEditDeviceScreen extends Component {
                     //onValueChange = {(itemValue, itemIndex) => this.setState({pickerValue: itemValue})} 
                     onValueChange = {this.handlePickerOption}
                     >
-
                     <Picker.Item label="Please, select device type" value='0' />
                     <Picker.Item label="Rollet" value="rollet" />
                     <Picker.Item label="Smart plug" value="plug" />
@@ -180,7 +166,6 @@ export default class AddEditDeviceScreen extends Component {
                 />
 
             </View>
-
         )
     }
   }
@@ -219,8 +204,7 @@ export default class AddEditDeviceScreen extends Component {
      },
      picker: {
         margin: 15,
-        
      },
-
-
   });
+
+  AddEditDeviceScreen.contextType = AppContext

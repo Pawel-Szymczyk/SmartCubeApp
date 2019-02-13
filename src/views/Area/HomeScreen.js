@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
-import { Platform, StyleSheet, View, Image, TouchableOpacity, Text, FlatList, Dimensions, Alert } from 'react-native';
-import { List, ListItem, Icon } from 'react-native-elements'
+import { StyleSheet, View, TouchableOpacity, Dimensions, } from 'react-native';
+import { ListItem, Icon } from 'react-native-elements'
 import Swipeable from 'react-native-swipeable';
 
 import AppContext from '../../components/AppContext';
 import Constants from "../../components/Constants";
-
-
 
 let willfocus = null;
 
@@ -47,22 +45,22 @@ export default class HomeScreen extends Component {
   };
 
 
-  handleRefresh = () => {
-    this.setState({
-      seed: this.state.seed + 1,
-      isRefreshing: true,
-    }, () => {
-      this.loadAreas();
-    });
-  };
+  // handleRefresh = () => {
+  //   this.setState({
+  //     seed: this.state.seed + 1,
+  //     isRefreshing: true,
+  //   }, () => {
+  //     this.loadAreas();
+  //   });
+  // };
 
-  handleLoadMore = () => {
-    this.setState({
-      page: this.state.page + 1,
-    }, () => {
-      this.loadAreas();
-    });
-  };
+  // handleLoadMore = () => {
+  //   this.setState({
+  //     page: this.state.page + 1,
+  //   }, () => {
+  //     this.loadAreas();
+  //   });
+  // };
 
   componentDidMount() {
     willFocus = this.props.navigation.addListener(
@@ -86,21 +84,22 @@ export default class HomeScreen extends Component {
         'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
       },
     })
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          areas: res.areas,
-          isLoading: false,
-        });
-      })
-      .catch(err => {
-        console.error(err);
-      })
-
+    .then(res => res.json())
+    .then(res => {
+      this.setState({
+        areas: res.areas,
+        isLoading: false,
+      });
+    })
+    .catch(err => {
+      console.error(err);
+    })
   };
 
-  handleEditArea = () => {
-    alert("lol")
+  handleEditArea() {
+    this.navigate("AddEditArea", {
+      name: 'Edit Area'
+    });
   }
 
   addAreaEvent() {
@@ -120,7 +119,7 @@ export default class HomeScreen extends Component {
 
   render() {
     const { areas, isRefreshing } = this.state;
-    alert(this.context.user.name);
+    //alert(this.context.user.authenticationToken);
     return (
       <View style={styles.scene}>
         {
@@ -131,7 +130,7 @@ export default class HomeScreen extends Component {
                 key={item.areaId}
                 rightButtons={[
                   <TouchableOpacity
-                    onPress={() => alert("lol")}
+                    onPress={() => this.handleEditArea()}
                   >
                     <Icon
                       //raised
@@ -180,19 +179,17 @@ export default class HomeScreen extends Component {
         }
 
         <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addAreaEvent() } style={styles.touchableOpacityStyle} >
-          <Image source={require('../../images/addButton.png')}  style={styles.floatingButtonStyle} />
+          <Icon
+            iconStyle={{fontSize: 40}}
+            name='plus-square'  
+            type='font-awesome'
+            color='#34495e'
+          />
         </TouchableOpacity>
 
       </View>  
-
-
     )
   }
-
-
-
-
-
 }
 
 const styles = StyleSheet.create({

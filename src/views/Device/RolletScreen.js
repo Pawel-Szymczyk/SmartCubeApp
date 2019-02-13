@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, Image  } from 'react-native';
 
+import Constants from "../../components/Constants";
+
 export default class RolletScreen extends Component {
 
     constructor(props) {
@@ -60,7 +62,7 @@ export default class RolletScreen extends Component {
           })
         }
     
-        fetch('http://192.168.0.17:3000/api/v1/devices/rollet', data)
+        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/rollet', data)
         .then((response) => response.json())
         .then((responseJson) => {
           //alert(responseJson.state);

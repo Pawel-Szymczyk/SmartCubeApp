@@ -50,18 +50,12 @@ export default class ForgetPasswordScreen extends Component {
           })
           .then((res) => {
                 if(status === 200) {
-                    //alert(res.authenticationToken)
-                    // set local settings...
-                    //this.setUserObject(res.user);
-                    // close this window and open main...
-                    //onPress = { () => this.actionOnRow(item)}
                     this.props.navigation.navigate(
                         'Password', {
                             isLoading: true, 
                             userId: res.userId, 
                             authenticationToken: res.authenticationToken
                         });
-                   // alert("works")
                 } else {
                     alert('error here')
                     //alert(res[0].message)

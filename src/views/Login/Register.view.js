@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import {AsyncStorage, ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
 import Constants from '../../components/Constants';
 
@@ -51,6 +51,16 @@ export default class RegistrationScreen extends Component {
         this.setState({ confirmPassword: text })
     }
 
+    storeAuthorizationToken = async (token) => {
+        try {
+           await AsyncStorage.setItem('authorizationToken', token);
+           // TODO: convert this to store array, that allows to recognize who is trying to login in 
+        } catch (error) {
+          // Error retrieving data
+          console.log(error.message);
+        }
+      };
+
     handleRegistration = () => {
 
         let status;
@@ -81,6 +91,8 @@ export default class RegistrationScreen extends Component {
           })
           .then((res) => {
                 if(status === 200) {
+
+                    this.storeAuthorizationToken(res.authorizationToken);
                     // set local settings...
                     //this.setUserObject(res.user);
                     // close this window and open main...

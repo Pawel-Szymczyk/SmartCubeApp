@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
-import { Button, ThemeProvider } from 'react-native-elements';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { Button, ThemeProvider, Icon } from 'react-native-elements';
 
+import AppContext from '../../components/AppContext';
+import Constants from "../../components/Constants";
+
+let willfocus = null;
 
 export default class DevicesScreen extends Component {
 
@@ -10,7 +14,6 @@ export default class DevicesScreen extends Component {
         this.navigate = this.props.navigation.navigate;
         this.params = this.props.navigation.state.params;
         
-
         this.state = {
             areaId: this.params.areaId,
             seed: 1,
@@ -31,106 +34,119 @@ export default class DevicesScreen extends Component {
 
 
 
-    handleRefresh = () => {
-        this.setState({
-          seed: this.state.seed + 1,
-          isRefreshing: true,
-        }, () => {
-          this.loadDevices();
-        });
-      };
+    // handleRefresh = () => {
+    //     this.setState({
+    //       seed: this.state.seed + 1,
+    //       isRefreshing: true,
+    //     }, () => {
+    //       this.loadDevices();
+    //     });
+    //   };
     
-    handleLoadMore = () => {
-        this.setState({
-            page: this.state.page + 1,
-        }, () => {
-            this.loadDevices();
-        });
-    };
+    // handleLoadMore = () => {
+    //     this.setState({
+    //         page: this.state.page + 1,
+    //     }, () => {
+    //         this.loadDevices();
+    //     });
+    // };
     
     componentDidMount() {
-        this.loadDevices();
+      willFocus = this.props.navigation.addListener(
+        'willFocus',
+        payload => {
+         // if (this.state.isLoading) {
+          this.loadDevices();
+         // }
+        }
+      );
     }
     
     loadDevices = () => {
         const {areas, seed, page} = this.state;
         this.setState({ isLoading: true });
  
+        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas/' + this.params.areaId, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+          },
+        })
+        .then(res => res.json())
+        .then(res => {
 
-        //fetch('http://192.168.0.17:3000/api/v1/areas/'+ this.params.areaId)
-        fetch('http://10.128.83.224:3000/api/v1/areas/'+ this.params.areaId)
-            .then(res => res.json())
-            .then(res => {
+            // check if obj is empty
+            // if (this.state.acessos && this.state.acessos.length) {}
 
-                // check if obj is empty
-                // if (this.state.acessos && this.state.acessos.length) {}
-
-                var devicesList = [];
-
-                devicesList = devicesList.concat(res.area.rollets);
-                devicesList = devicesList.concat(res.area.plugs);
-                
-                this.setState({
-                    devices: devicesList,   
-                    isLoading: false,
-                });
-            })
-            .catch(err => {
-                console.error(err);
-            })
-        
+            var devicesList = [];
+            devicesList = devicesList.concat(res.area.rollets);
+            devicesList = devicesList.concat(res.area.plugs);
+            
+            this.setState({
+              devices: devicesList,   
+              isLoading: false,
+            });
+        })
+        .catch(err => {
+            console.error(err);
+        })
     };
 
     addDeviceEvent() {
-        this.navigate("AddEditDevice", {
-            name: 'Add Device',
-            areaId: this.state.areaId
-        });
-
+      this.navigate("AddEditDevice", {
+        name: 'Add Device',
+        areaId: this.state.areaId
+      });
     }
 
     // Go to 'device' panel.
     actionOnRow(item) {
-        this.navigate(item.type, {
-            deviceId: item.id,
-            deviceName: item.name,
-            deviceObject: item
-        });
+      this.navigate(item.type, {
+        deviceId: item.id,
+        deviceName: item.name,
+        deviceObject: item
+      });
     }
-
 
     render() {
         const { devices, isRefreshing } = this.state;
         return (
-            <View style={styles.scene}>
-              <FlatList 
-                data={devices}
-                renderItem={({item}) => (
-                  
-                  <View style={styles.boxes} elevation={1}>
-                    <TouchableOpacity 
-                      onPress = { () => this.actionOnRow(item)}
-                      style={styles.box}
-                    >
-                      <Text style={styles.boxName}>{item.name}</Text>
-                      <Text style={styles.boxState}>{item.powerState} </Text>
-                    </TouchableOpacity> 
-                  </View>
-              )}
-                numColumns={3}
-                keyExtractor={(index) => index.name}
-                refreshing={isRefreshing}
-                onRefresh={this.onRefresh}
-                onEndReached={this.handleLoadMore}
-                onEndThreshold={0}
+          <View style={styles.scene}>
+            <FlatList 
+              data={devices}
+              renderItem={({item}) => (
+                
+                <View style={styles.boxes} elevation={1}>
+                  <TouchableOpacity 
+                    onPress = { () => this.actionOnRow(item)}
+                    style={styles.box}
+                  >
+                    <Text style={styles.boxName}>{item.name}</Text>
+                    <Text style={styles.boxState}>{item.powerState} </Text>
+                  </TouchableOpacity> 
+                </View>
+            )}
+              numColumns={3}
+              keyExtractor={(index) => index.name}
+              refreshing={isRefreshing}
+              onRefresh={this.onRefresh}
+              onEndReached={this.handleLoadMore}
+              onEndThreshold={0}
+            />
+    
+            <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addDeviceEvent() } style={styles.touchableOpacityStyle} >
+              {/* <Image source={require('../../images/addButton.png')}  style={styles.floatingButtonStyle} /> */}
+              <Icon
+                iconStyle={{fontSize: 40}}
+                name='plus-square'  
+                type='font-awesome'
+                color='#34495e'
               />
-      
-              <TouchableOpacity activeOpacity={0.5} onPress={ () => this.addDeviceEvent() } style={styles.touchableOpacityStyle} >
-                <Image source={require('../../images/addButton.png')}  style={styles.floatingButtonStyle} />
-              </TouchableOpacity>
-      
-            </View>  
-          )
+            </TouchableOpacity>
+    
+          </View>  
+        )
     }
 }
 
@@ -153,8 +169,6 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      
-      
     },
     boxName: {
       fontSize: 16,
@@ -178,3 +192,5 @@ const styles = StyleSheet.create({
       height: 50,
     },
   });
+
+  DevicesScreen.contextType = AppContext

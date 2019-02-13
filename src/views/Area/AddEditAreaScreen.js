@@ -3,6 +3,7 @@ import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity } from 'rea
 import { FormLabel, Header} from 'react-native-elements';
 
 import Constants from "../../components/Constants";
+import AppContext from '../../components/AppContext';
 
 
 export default class AddEditAreaScreen extends Component {
@@ -58,6 +59,7 @@ export default class AddEditAreaScreen extends Component {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
+              'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
             },
             body: JSON.stringify({
               name: this.state.name,
@@ -66,7 +68,7 @@ export default class AddEditAreaScreen extends Component {
             })
           }
       
-        fetch(Constants.SERVER_HTTP_ADDRESS + 'api/v1/areas/create', data)
+        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas/create', data)
           .then((res) => res.json())
           .then((res) => {
                 // close this window and open main...
@@ -79,7 +81,6 @@ export default class AddEditAreaScreen extends Component {
 
     render() {
         const { navigation } = this.props;
-
         return (
 
             <View style = {styles.container}>
@@ -136,3 +137,5 @@ submitButton: {
     }
 
 });
+
+AddEditAreaScreen.contextType = AppContext

@@ -36,7 +36,7 @@ const RootStack = createStackNavigator(
   },
   {
      initialRouteName: 'Select',
-    // initialRouteName: 'Home',
+     // initialRouteName: 'Home',
 
     // header config
     defaultNavigationOptions: {
@@ -101,10 +101,6 @@ class AppProvider extends React.Component {
 
     this.state = {
       user: {},
-
-      // authenticationToken: '',
-      // name:'Konrad',
-      // partyId:'123456',
       isAuthenticated:false,
       authenticate:(user) => {
         this.state.user =  user

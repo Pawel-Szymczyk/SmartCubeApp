@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import {AsyncStorage, ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
 import AppContext from '../../components/AppContext';
 import Constants from '../../components/Constants';
@@ -15,7 +15,8 @@ export default class LoginScreen extends Component {
 
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            authorizationToken: ''
         }
     }
 
@@ -28,7 +29,8 @@ export default class LoginScreen extends Component {
     }
 
     componentDidMount() {
-        console.log('context', this.context)
+       // console.log('context', this.context)
+        this.getAuthorizationToken();
     }
 
     // Set app context object...
@@ -36,9 +38,25 @@ export default class LoginScreen extends Component {
         this.context.authenticate(obj);
     }
 
+    getAuthorizationToken = async () => {
+        
+        try {
+           const token = await AsyncStorage.getItem('authorizationToken');
+           this.setState({
+            authorizationToken: token
+           })
+           //return token;
+        } catch (error) {
+          // Error retrieving data
+          console.log(error.message);
+        }
+        return
+      };
+
     handleLogin = () => {
 
         let status;
+
 
         let data = {
             method: 'POST',
@@ -46,7 +64,7 @@ export default class LoginScreen extends Component {
               Accept: 'application/json',
               'Content-Type': 'application/json',
               // set this token to local db
-              'authorizationToken': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImZvcm0iOiJtb2JpbGVhcHAiLCJ1c2VybmFtZSI6InBhd2VsIiwidXNlclR5cGUiOiJ1c2VyIiwiaXNWYWxpZCI6InRydWUifSwiaWF0IjoxNTQ5ODk1MDk1fQ.z01tbMoPFLvTZAhGcPPxisEV8zChR5h0KYPrC34pYOI'
+              'authorizationToken': 'Bearer ' + this.state.authorizationToken
             },
             body: JSON.stringify({
               username: this.state.username,

@@ -29,6 +29,8 @@ export default class PasswordScreen extends Component {
         this.setState({ confirmPassword: text })
     }
 
+    // TODO: add store asynTonec to asyncStorage functionality...
+
     handleRegistration = () => {
 
         let status;

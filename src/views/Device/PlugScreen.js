@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, FlatList  } from 'react-native';
 
+import Constants from "../../components/Constants";
+
 export default class PlugScreen extends Component {
 
     constructor(props) {
@@ -29,8 +31,9 @@ export default class PlugScreen extends Component {
         const {areas, seed, page} = this.state;
         this.setState({ isLoading: true });
  
+            alert(this.params.deviceId)
 
-        fetch('http://192.168.0.17:3000/api/v1/devices/plug/'+ this.params.deviceId)
+        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/plug/'+ this.params.deviceId)
             .then(res => res.json())
             .then(res => {
 
@@ -72,10 +75,8 @@ export default class PlugScreen extends Component {
           };
 
           
-  
-  
           // add device serial number to url
-          fetch('http://192.168.0.17:3000/api/v1/devices/plug', data)
+          fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/plug', data)
           .then((response) => response.json())
           .then((responseJson) => {
 
