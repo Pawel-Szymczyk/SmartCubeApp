@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import { View, Text, Button, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Button, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { createStackNavigator, createAppContainer, createDrawerNavigator, DrawerItems } from "react-navigation";
 import { Avatar } from 'react-native-elements'
 import AppContext from './src/components/AppContext';
+
+import MenuComponent from './src/components/Menu';
 
 // Routes...
 import SelectScreen from './src/views/Login/Select.view';
@@ -18,28 +20,44 @@ import AddEditDeviceScreen from './src/views/Device/AddEditDeviceScreen';
 import RolletScreen from './src/views/Device/RolletScreen';
 import PlugScreen from './src/views/Device/PlugScreen';
 
-const RootStack = createStackNavigator(
-  {
-    Select: SelectScreen,
-    Login: LoginScreen,
-    Registration: RegistrationScreen,
-    ForgetPassword: ForgetPasswordScreen,
-    Password: PasswordScreen,
-    Settings: SettingsScreen,
-    Home: HomeScreen,
-    AddEditArea: AddEditAreaScreen,
-    Devices: DevicesScreen,
-    AddEditDevice: AddEditDeviceScreen,
+// -------------------------------------------------------------
 
-    rollet: RolletScreen,
-    plug: PlugScreen,
+const RootStack = createStackNavigator({
+
+  // ---------------------------------
+
+  Select: {
+    screen: SelectScreen,
+    navigationOptions: {
+      header: null
+    }
   },
-  {
-     initialRouteName: 'Select',
-     // initialRouteName: 'Home',
 
-    // header config
-    defaultNavigationOptions: {
+  Login: {
+    screen: LoginScreen,
+  },
+
+  Registration: {
+    screen: RegistrationScreen
+  },
+
+  ForgetPassword: {
+    screen: ForgetPasswordScreen
+  },
+  
+  Password: {
+    screen: PasswordScreen
+  },
+
+  Logout: {
+    screen: SelectScreen
+  },
+
+  // ---------------------------------
+
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
       headerStyle: {
         backgroundColor: '#34495e',
       },
@@ -47,56 +65,68 @@ const RootStack = createStackNavigator(
       headerTitleStyle: {
         fontWeight: 'bold',
       },
-      
     },
+  },
+
+  
+  AddEditArea: {
+    screen: AddEditAreaScreen
+  },
+
+  Devices: {
+    screen: DevicesScreen
+  },
+
+  AddEditDevice: {
+    screen: AddEditDeviceScreen
+  },
+
+  rollet: {
+    screen: RolletScreen
+
+  },
+
+  plug: {
+    screen: PlugScreen
+  },
+
+  // ---------------------------------
+
+  Settings: {
+    screen: SettingsScreen
+  },
+
+});
+
+// -------------------------------------------------------------
+
+const RootDrawer = createDrawerNavigator({
+    Main: RootStack,
+  },
+  {
+    initialRouteName: 'Main',
+    contentComponent: MenuComponent,
+    drawerWidth: 250,
+    drawerPosition: 'left',
+    swipeEnabled: true
   }
 );
 
-
-const RootDrawer = createDrawerNavigator(
-  {
-    Home: { screen: RootStack, },
-    Settings: { screen: RootStack, },
-
-    Logout: { screen: LoginScreen, }
+const AppStack = createStackNavigator({
+  drawer: {
+    screen: RootDrawer,
+  }
   },
-  
   {
-    // initialRouteName: 'Home',
-    // drawerWidth: 200,
-
-    contentComponent: (props) => (
-      <SafeAreaView >
-          <View style={{height: 170,alignItems: 'center', justifyContent: 'center', backgroundColor: '#34495e'}}>
-            <Avatar
-              xlarge
-              rounded
-              title="PS"
-              activeOpacity={0.7}
-            />
-            
-          </View>
-        <ScrollView>
-          <DrawerItems {...props} />
-          
-        {/* <TouchableOpacity
-          onPress={() => {this.navigate.} }
-          >
-          <View style={{  }}>
-            <Text style={{color: '#444'}}>Logout</Text>
-          </View>
-        </TouchableOpacity> */}
-
-        </ScrollView>
-      </SafeAreaView>
-     )
-  },
-
+    initialRouteName: 'drawer',
+    headerMode:'none',
+    
+  }
 );
 
+const AppContainer = createAppContainer(AppStack);
 
-
-const AppContainer = createAppContainer(RootDrawer);
+// -------------------------------------------------------------
 
 export default class App extends Component {
   render() {
@@ -107,7 +137,6 @@ export default class App extends Component {
     );
   }
 }
-
 
 class AppProvider extends React.Component {
 
@@ -130,4 +159,5 @@ class AppProvider extends React.Component {
       </AppContext.Provider>
     )
   }
+
 }

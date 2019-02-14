@@ -93,6 +93,8 @@ export default class LoginScreen extends Component {
         if(this.state.checked) {
             this.storeLoginCredentials(this.state.username, this.state.password, this.state.checked);
         } else {
+            this.setState({ username: '', password: '' }); // to further testing and refactoring...
+
             let value = await AsyncStorage.getItem('loginDetails');
             if(value !== null) {
                 AsyncStorage.removeItem('loginDetails');
@@ -105,8 +107,6 @@ export default class LoginScreen extends Component {
         this.checkValidation();
 
         let status;
-
-
         let data = {
             method: 'POST',
             headers: {
