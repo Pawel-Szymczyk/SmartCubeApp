@@ -7,8 +7,8 @@ export default {
     //   LIGHTBLUE: '#6EA8DA',
     //   DARKGRAY: '#999',
     // },
-     SERVER_IP: '192.168.0.22' ,//10.128.83.81',
-    //SERVER_IP: 'localhost',
+    SERVER_IP: '10.128.83.182',
+    // SERVER_IP: 'localhost',
     PORT: '3000',
     //SERVER_HTTP_ADDRESS: 'http://192.168.0.22:3000',
   };

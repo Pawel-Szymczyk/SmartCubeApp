@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Button, SafeAreaView, ScrollView,  } from 'react-native';
+import { View, Text, Button, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { createStackNavigator, createAppContainer, createDrawerNavigator, DrawerItems } from "react-navigation";
 import { Avatar } from 'react-native-elements'
 import AppContext from './src/components/AppContext';
@@ -56,8 +56,11 @@ const RootStack = createStackNavigator(
 const RootDrawer = createDrawerNavigator(
   {
     Home: { screen: RootStack, },
-    Settings: {screen: RootStack, },
+    Settings: { screen: RootStack, },
+
+    Logout: { screen: LoginScreen, }
   },
+  
   {
     // initialRouteName: 'Home',
     // drawerWidth: 200,
@@ -71,15 +74,27 @@ const RootDrawer = createDrawerNavigator(
               title="PS"
               activeOpacity={0.7}
             />
+            
           </View>
         <ScrollView>
           <DrawerItems {...props} />
+          
+        {/* <TouchableOpacity
+          onPress={() => {this.navigate.} }
+          >
+          <View style={{  }}>
+            <Text style={{color: '#444'}}>Logout</Text>
+          </View>
+        </TouchableOpacity> */}
+
         </ScrollView>
       </SafeAreaView>
      )
-    
-  }
+  },
+
 );
+
+
 
 const AppContainer = createAppContainer(RootDrawer);
 

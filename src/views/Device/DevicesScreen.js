@@ -88,6 +88,12 @@ export default class DevicesScreen extends Component {
       });
     }
 
+    getIcon = (iconType) => {
+      
+      
+
+    }
+
     render() {
         const { devices, isRefreshing } = this.state;
         return (
@@ -128,12 +134,14 @@ export default class DevicesScreen extends Component {
                       >
                         <ListItem
                           leftIcon={
+                            
                             <Icon
                               //raised
-                              containerStyle={{padding: 10}}
-                              name='bed'
+                              containerStyle={{padding: 10, paddingRight: 20}}
+                              //name='bed'
+                              name={item.icon}
                               type='font-awesome'
-                              color='#f50'
+                              color='#000'
                             />
                           }
                           title={item.name}
