@@ -70,7 +70,16 @@ const RootStack = createStackNavigator({
 
   
   AddEditArea: {
-    screen: AddEditAreaScreen
+    screen: AddEditAreaScreen,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#34495e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    },
   },
 
   Devices: {
@@ -78,16 +87,43 @@ const RootStack = createStackNavigator({
   },
 
   AddEditDevice: {
-    screen: AddEditDeviceScreen
+    screen: AddEditDeviceScreen,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#34495e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    },
   },
 
   rollet: {
-    screen: RolletScreen
+    screen: RolletScreen,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#34495e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    },
 
   },
 
   plug: {
-    screen: PlugScreen
+    screen: PlugScreen,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#34495e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    },
   },
 
   // ---------------------------------

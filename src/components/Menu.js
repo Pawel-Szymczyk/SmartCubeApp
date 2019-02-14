@@ -65,10 +65,7 @@ export default class MenuComponent extends Component {
             this.checkValidation()
         }
     },
-    
   ];
-
-
 
   render () {
     return (
@@ -113,7 +110,6 @@ export default class MenuComponent extends Component {
             items={this.personalList}
         />
 
-        
       </Drawer>
     )
   }

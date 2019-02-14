@@ -69,9 +69,33 @@ export default class DevicesScreen extends Component {
         })
     };
 
+    deleteDevice = (item) => {
+
+      fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/' + item.type + '/delete/' + item.id, {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+        },
+      })
+      .then(res => res.json())
+      .then(res => {
+  
+        this.loadDevices();
+  
+        alert( item.type + " removed successfuly");
+      })
+      .catch(err => {
+        console.error(err);
+      })
+  
+    };
+
     handleEditDevice() {
 
     }
+    
     handleAddDevice() {
       this.navigate("AddEditDevice", {
         name: 'Add Device',
@@ -89,9 +113,7 @@ export default class DevicesScreen extends Component {
     }
 
     getIcon = (iconType) => {
-      
-      
-
+  
     }
 
     render() {
@@ -117,7 +139,9 @@ export default class DevicesScreen extends Component {
                           
                         />
                       </TouchableOpacity>,
-                      <TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={ () => this.deleteDevice(item)}
+                      >
                         <Icon
                           //raised
                           containerStyle={{backgroundColor: '#e84118', height: 80, paddingLeft: 30, alignItems: 'flex-start'}}

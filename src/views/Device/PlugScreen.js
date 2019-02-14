@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, FlatList  } from 'react-native';
 
+import AppContext from '../../components/AppContext';
 import Constants from "../../components/Constants";
+
 
 export default class PlugScreen extends Component {
 
@@ -31,9 +33,13 @@ export default class PlugScreen extends Component {
         const {areas, seed, page} = this.state;
         this.setState({ isLoading: true });
  
-            alert(this.params.deviceId)
-
-        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/plug/'+ this.params.deviceId)
+        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/plug/'+ this.params.deviceId, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+              },
+            })
             .then(res => res.json())
             .then(res => {
 
@@ -192,3 +198,5 @@ export default class PlugScreen extends Component {
     },
 
   });
+
+  PlugScreen.contextType = AppContext

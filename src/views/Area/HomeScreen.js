@@ -95,7 +95,30 @@ export default class HomeScreen extends Component {
     })
   };
 
-  handleEditArea() {
+  deleteArea = (item) => {
+
+    fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas/' + item.areaId, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+      },
+    })
+    .then(res => res.json())
+    .then(res => {
+
+      this.loadAreas();
+
+      alert("Area removed successfuly");
+    })
+    .catch(err => {
+      console.error(err);
+    })
+
+  };
+
+  handleEditArea(item) {
     this.navigate("AddEditArea", {
       name: 'Edit Area'
     });
@@ -118,7 +141,6 @@ export default class HomeScreen extends Component {
 
   render() {
     const { areas } = this.state;
-    //alert(this.context.user.authenticationToken);
     return (
       <View style={styles.scene}>
         {
@@ -129,7 +151,7 @@ export default class HomeScreen extends Component {
                 key={item.areaId}
                 rightButtons={[
                   <TouchableOpacity
-                    onPress={() => this.handleEditArea()}
+                    onPress={() => this.handleEditArea(item)}
                   >
                     <Icon
                       //raised
@@ -140,7 +162,9 @@ export default class HomeScreen extends Component {
                       
                     />
                   </TouchableOpacity>,
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={ () => this.deleteArea(item)}
+                  >
                     <Icon
                       //raised
                       containerStyle={{backgroundColor: '#e84118', height: 80, paddingLeft: 30, alignItems: 'flex-start'}}

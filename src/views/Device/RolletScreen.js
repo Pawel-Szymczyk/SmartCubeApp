@@ -65,34 +65,7 @@ export default class RolletScreen extends Component {
         fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/rollet', data)
         .then((response) => response.json())
         .then((responseJson) => {
-          //alert(responseJson.state);
-  
-          // this.setState({
-          //   lightValue: responseJson.state
-          // })
-
-        //   if(event == 'up') {
-        //     this.setState({
-        //         stateValue: 'on',
-        //         actionValue: 'up' 
-        //     });
-        //   }  
-
-        //   if(event == 'down') {
-        //     this.setState({
-        //         stateValue: 'on',
-        //         actionValue: 'down' 
-        //     });
-        //   }
-
-        //   if(event == 'stop') {
-        //     this.setState({
-        //         stateValue: 'on',
-        //         actionValue: 'stop' 
-        //     });
-        //   }
-
-
+          
     
         })
         .catch((error) => {
@@ -117,8 +90,6 @@ export default class RolletScreen extends Component {
                     <Text style={styles.textBox}>State</Text>
                     <Switch
                         style={styles.switchBox}
-                        // onValueChange = {() => this.plugControl()}
-                        // value = {this.state.plugBoolValue}
                         onValueChange = {() => this._changeStateValue()}
                         value = {this.state.switchValue}
                         // TODO: later fix this issue; and provide ability to make rollet 'on' but without executing action
@@ -189,9 +160,6 @@ export default class RolletScreen extends Component {
         borderBottomWidth: 1,
         margin: 10,
         padding: 10,
-
-        // borderWidth: 1,
-        // borderColor: 'red',
     },
 
     textBox: {
