@@ -69,10 +69,18 @@ export default class AddEditAreaScreen extends Component {
           }
       
         fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas/create', data)
-          .then((res) => res.json())
+          .then(response => {
+            status = response.status;
+            return response.json();
+          })
           .then((res) => {
-                // close this window and open main...
+              
+            if(status === 200) {
                 this.props.navigation.navigate('Home', {isLoading: true});
+            } else {
+                alert(res.error[0].message);
+            }
+                
           })
           .catch((error) =>{
             console.error(error);

@@ -22,6 +22,16 @@ import PlugScreen from './src/views/Device/PlugScreen';
 
 // -------------------------------------------------------------
 
+const defaultStyling = {
+    headerStyle: {
+      backgroundColor: '#34495e',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+}
+
 const RootStack = createStackNavigator({
 
   // ---------------------------------
@@ -57,79 +67,40 @@ const RootStack = createStackNavigator({
 
   Home: {
     screen: HomeScreen,
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#34495e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    },
+    navigationOptions: defaultStyling,
   },
 
   
   AddEditArea: {
     screen: AddEditAreaScreen,
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#34495e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    },
+    navigationOptions: defaultStyling,
   },
 
   Devices: {
-    screen: DevicesScreen
+    screen: DevicesScreen,
+    navigationOptions: defaultStyling,
   },
 
   AddEditDevice: {
     screen: AddEditDeviceScreen,
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#34495e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    },
+    navigationOptions: defaultStyling,
   },
 
   rollet: {
     screen: RolletScreen,
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#34495e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    },
-
+    navigationOptions: defaultStyling,
   },
 
   plug: {
     screen: PlugScreen,
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#34495e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    },
+    navigationOptions: defaultStyling,
   },
 
   // ---------------------------------
 
   Settings: {
-    screen: SettingsScreen
+    screen: SettingsScreen,
+    navigationOptions: defaultStyling,
   },
 
 });

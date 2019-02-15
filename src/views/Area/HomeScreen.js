@@ -120,7 +120,8 @@ export default class HomeScreen extends Component {
 
   handleEditArea(item) {
     this.navigate("AddEditArea", {
-      name: 'Edit Area'
+      name: 'Edit Area',
+      areaId: item.areaId,
     });
   }
 
