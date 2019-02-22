@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {AsyncStorage, ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
+import AppContext from '../../components/AppContext';
 import Constants from '../../components/Constants';
 
 export default class RegistrationScreen extends Component {
@@ -19,7 +20,8 @@ export default class RegistrationScreen extends Component {
             username: '',
             secretAnswer: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            ip: ''
         }
     }
 
@@ -51,6 +53,10 @@ export default class RegistrationScreen extends Component {
         this.setState({ confirmPassword: text })
     }
 
+    componentDidMount() {
+         this.getConfigCredentials();
+    }
+
     storeAuthorizationToken = async (token) => {
         try {
            await AsyncStorage.setItem('authorizationToken', token);
@@ -60,6 +66,20 @@ export default class RegistrationScreen extends Component {
           console.log(error.message);
         }
       };
+
+    getConfigCredentials = async() => {
+        try {
+            let configDetails = await AsyncStorage.getItem('configDetails');
+            let parsed = JSON.parse(configDetails);
+            this.setState({
+                ip: parsed.ip,
+            })
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+        return
+    }
 
     handleRegistration = () => {
 
@@ -82,9 +102,7 @@ export default class RegistrationScreen extends Component {
             })
         }
 
-        //alert(data.body)
-        
-        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/users/registration', data)
+        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/users/registration', data)
           .then(response => {
             status = response.status;
             return response.json();
@@ -97,13 +115,11 @@ export default class RegistrationScreen extends Component {
                     //this.setUserObject(res.user);
                     // close this window and open main...
                     this.props.navigation.navigate('Login', {isLoading: true});
-                   // alert("works")
                 } else {
                     alert(res[0].message)
                 }
           })
           .catch((error) =>{
-            //console.error(error);
             alert(error);
           });
 
@@ -280,3 +296,5 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
 });
+
+RegistrationScreen.contextType = AppContext

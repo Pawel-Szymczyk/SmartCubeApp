@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Picker} from 'react-native';
+import { AsyncStorage, View, Text, StyleSheet, TextInput, TouchableOpacity, Picker} from 'react-native';
 import { FormLabel, Input} from 'react-native-elements';
 
 import Constants from "../../components/Constants";
@@ -16,7 +16,7 @@ export default class AddEditDeviceScreen extends Component {
             name: '',
             topic: '',
             serialNumber: '',
-
+            ip: '',
             pickerValue: '',
 
             checked: false,
@@ -43,6 +43,21 @@ export default class AddEditDeviceScreen extends Component {
 
     componentDidMount() {
         this.props.navigation.setParams({handleSave: () => this.handleSaving()});
+        this.getConfigCredentials();
+    }
+
+    getConfigCredentials = async() => {
+        try {
+            let configDetails = await AsyncStorage.getItem('configDetails');
+            let parsed = JSON.parse(configDetails);
+            this.setState({
+                ip: parsed.ip,
+            })
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+        return
     }
 
     handleName = (text) => {
@@ -103,7 +118,7 @@ export default class AddEditDeviceScreen extends Component {
             body: this.getRequestBody()
           }
 
-          fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/' + this.state.pickerValue + '/create', data)
+          fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/' + this.state.pickerValue + '/create', data)
           .then((res) => res.json())
           .then((res) => {
                 // close this window and open main...

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import { ActivityIndicator, View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, ImageBackground, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground, StatusBar } from 'react-native';
+import { Icon } from 'react-native-elements';
 
 export default class SelectScreen extends Component {
 
@@ -17,6 +18,16 @@ export default class SelectScreen extends Component {
             <ImageBackground source={require('../../images/darkcubesVertical3.png')} style={styles.backgoundImg} blurRadius={0.3}>
 
                 <View style={styles.container}>
+
+                    <TouchableOpacity onPress={() => navigate('Config')} >
+                        <Icon
+                            iconStyle={{opacity: 0.1, padding: 10, alignSelf: 'flex-end'}}
+                            name='cog'  
+                            type='font-awesome'
+                            color='#fff'
+                        />
+                    </TouchableOpacity>
+
                     <StatusBar hidden={true} />
                     <View style={styles.logoContainer}>
                         

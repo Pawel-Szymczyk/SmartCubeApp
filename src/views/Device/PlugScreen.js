@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, FlatList  } from 'react-native';
+import { AsyncStorage, View, Text, StyleSheet, Switch, TouchableOpacity, FlatList  } from 'react-native';
 
 import AppContext from '../../components/AppContext';
 import Constants from "../../components/Constants";
@@ -18,6 +18,8 @@ export default class PlugScreen extends Component {
           deviceId: this.params.deviceId,
           plugData: [],
           plugState: false,
+          ip: '',
+          isSet: false
         };
 
     }
@@ -28,29 +30,51 @@ export default class PlugScreen extends Component {
       };
     };
 
+    getConfigCredentials = async() => {
+        try {
+            let configDetails = await AsyncStorage.getItem('configDetails');
+            let parsed = JSON.parse(configDetails);
+            this.setState({
+                ip: parsed.ip,
+                isSet: true,
+            })
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+        return
+    }
+
         // load data from server
     componentDidMount() {
-        const {areas, seed, page} = this.state;
-        this.setState({ isLoading: true });
- 
-        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/plug/'+ this.params.deviceId, {
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-                'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
-              },
-            })
-            .then(res => res.json())
-            .then(res => {
+        this.getConfigCredentials();
+        if(this.state.isSet) {
+        
+        
 
-                this.setState({
-                    plugState: res.powerState
-                });
 
-            })
-            .catch(err => {
-                console.error(err);
-            })
+            this.setState({ isLoading: true });
+    
+            fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/plug/'+ this.params.deviceId, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+                },
+                })
+                .then(res => res.json())
+                .then(res => {
+
+                    this.setState({
+                        plugState: res.powerState
+                    });
+
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+
+        }
     }
 
 
@@ -74,7 +98,7 @@ export default class PlugScreen extends Component {
                 name: this.params.deviceObject.name,
                 type: this.params.deviceObject.type,
                 powerState: !this.state.plugState,
-                serialNumber: "p0000001",
+                serialNumber: "PG000001-CUBE",
                 topic: this.params.deviceObject.topic,
                 areaId: this.params.deviceObject.areaId
             })
@@ -82,7 +106,7 @@ export default class PlugScreen extends Component {
 
           
           // add device serial number to url
-          fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/plug', data)
+          fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/plug', data)
           .then((response) => response.json())
           .then((responseJson) => {
 
@@ -123,14 +147,6 @@ export default class PlugScreen extends Component {
 
                 {/* todo */}
                 <View style={styles.box}>
-                    {/* <View style={styles.innerBox}>
-                        <Text style={styles.textBox2}>Current working time</Text>
-                        <Text style={styles.textBox2}>Text here </Text>
-                    </View>
-                    <View style={styles.innerBox}>
-                        <Text style={styles.textBox2}>Current working time</Text>
-                        <Text style={styles.textBox2}>Text here </Text>
-                    </View> */}
                     <FlatList
                     data={[{key: 'a'}, {key: 'b'}, {key: 'c'}]}
                     renderItem={({item}) => (
@@ -143,11 +159,7 @@ export default class PlugScreen extends Component {
                     
                     />
                 </View>
-
-
-
             </View>
-
         )
     }
 

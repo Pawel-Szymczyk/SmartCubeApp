@@ -7,6 +7,7 @@ import AppContext from './src/components/AppContext';
 import MenuComponent from './src/components/Menu';
 
 // Routes...
+import ConfigScreen from './src/views/Login/Config.view';
 import SelectScreen from './src/views/Login/Select.view';
 import LoginScreen from './src/views/Login/Login.view';
 import RegistrationScreen from './src/views/Login/Register.view';
@@ -35,7 +36,7 @@ const defaultStyling = {
 const RootStack = createStackNavigator({
 
   // ---------------------------------
-
+  
   Select: {
     screen: SelectScreen,
     navigationOptions: {
@@ -45,6 +46,11 @@ const RootStack = createStackNavigator({
 
   Login: {
     screen: LoginScreen,
+  },
+
+  Config: {
+    screen: ConfigScreen,
+    navigationOptions: defaultStyling,
   },
 
   Registration: {

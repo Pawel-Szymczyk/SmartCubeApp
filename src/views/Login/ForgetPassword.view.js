@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import { ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { AsyncStorage, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
+import AppContext from '../../components/AppContext';
 import Constants from '../../components/Constants';
 
 export default class ForgetPasswordScreen extends Component {
@@ -12,11 +13,10 @@ export default class ForgetPasswordScreen extends Component {
     constructor(props) {
         super(props);
 
-        
-
         this.state = {
             email: '',
-            secretAnswer: ''
+            secretAnswer: '',
+            ip: ''
         }
     }
 
@@ -26,6 +26,20 @@ export default class ForgetPasswordScreen extends Component {
 
     handleSecretAnswerInput = (text) => {
         this.setState({ secretAnswer: text })
+    }
+
+    getConfigCredentials = async() => {
+        try {
+            let configDetails = await AsyncStorage.getItem('configDetails');
+            let parsed = JSON.parse(configDetails);
+            this.setState({
+                ip: parsed.ip,
+            })
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+        return
     }
 
     handleForgetPassword = () => {
@@ -43,7 +57,7 @@ export default class ForgetPasswordScreen extends Component {
                 secretAnswer: this.state.secretAnswer
             })
         }
-        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/users/resetpassword', data)
+        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/users/resetpassword', data)
           .then(response => {
             status = response.status;
             return response.json();
@@ -176,3 +190,5 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
 });
+
+ForgetPasswordScreen.contextType = AppContext

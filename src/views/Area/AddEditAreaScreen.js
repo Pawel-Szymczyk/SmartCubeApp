@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { AsyncStorage, View, Text, Button, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { FormLabel, Header} from 'react-native-elements';
 
 import Constants from "../../components/Constants";
@@ -16,6 +16,7 @@ export default class AddEditAreaScreen extends Component {
             name: '',
             owner: '',
             areaState: '',
+            ip: ''
         }
     }
 
@@ -38,7 +39,22 @@ export default class AddEditAreaScreen extends Component {
     };
 
     componentDidMount() {
+        this.getConfigCredentials();
         this.props.navigation.setParams({handleSave: () => this.handleSaving()});
+    }
+
+    getConfigCredentials = async() => {
+        try {
+            let configDetails = await AsyncStorage.getItem('configDetails');
+            let parsed = JSON.parse(configDetails);
+            this.setState({
+                ip: parsed.ip,
+            })
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+        return
     }
 
     handleName = (text) => {
@@ -68,7 +84,7 @@ export default class AddEditAreaScreen extends Component {
             })
           }
       
-        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas/create', data)
+        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas/create', data)
           .then(response => {
             status = response.status;
             return response.json();

@@ -18,6 +18,7 @@ export default class LoginScreen extends Component {
             username: '',
             password: '',
             authorizationToken: '',
+            ip: '',
             checked: false
         }
     }
@@ -34,6 +35,7 @@ export default class LoginScreen extends Component {
        // console.log('context', this.context)
         this.getAuthorizationToken();
         this.getLoginCredentials();
+        this.getConfigCredentials();
     }
 
     // Set app context object...
@@ -54,7 +56,7 @@ export default class LoginScreen extends Component {
           console.log(error.message);
         }
         return
-      };
+    };
 
     storeLoginCredentials = async(username, password, isChecked) => {
         let obj = {
@@ -72,14 +74,29 @@ export default class LoginScreen extends Component {
          }
     }
 
+    getConfigCredentials = async() => {
+        try {
+            let configDetails = await AsyncStorage.getItem('configDetails');
+            let parsed = JSON.parse(configDetails);
+            this.setState({
+                ip: parsed.ip,
+            })
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+        return
+    }
+
     getLoginCredentials = async() => {
+        
         try {
             let loginDetails = await AsyncStorage.getItem('loginDetails');
             let parsed = JSON.parse(loginDetails);
             this.setState({
-             username: parsed.username,
-             password: parsed.password,
-             checked: parsed.isChecked
+                username: parsed.username,
+                password: parsed.password,
+                checked: parsed.isChecked
             })
          } catch (error) {
            // Error retrieving data
@@ -103,7 +120,6 @@ export default class LoginScreen extends Component {
     }
 
     handleLogin = () => {
-
         this.checkValidation();
 
         let status;
@@ -121,7 +137,7 @@ export default class LoginScreen extends Component {
             })
         }
         
-        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/users/login', data)
+        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/users/login', data)
           .then(response => {
             status = response.status;
             return response.json();
@@ -135,6 +151,7 @@ export default class LoginScreen extends Component {
                 } else {
                     this.props.navigation.navigate('Login', {isLoading: true});
                     alert(res.message)
+                   
                 }
           })
           .catch((error) =>{

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, TouchableOpacity, Dimensions, } from 'react-native';
+import { AsyncStorage, StyleSheet, View, TouchableOpacity, Dimensions, } from 'react-native';
 import { ListItem, Icon } from 'react-native-elements'
 import Swipeable from 'react-native-swipeable';
 
@@ -15,10 +15,12 @@ export default class HomeScreen extends Component {
     this.navigate = this.props.navigation.navigate;
 
     this.state = {
+      ip: '',
       seed: 1,
       page: 1,
       areas: [],
       isLoading: false,
+      isSet: false
     };
   }
 
@@ -61,22 +63,45 @@ export default class HomeScreen extends Component {
   //   });
   // };
 
+
   componentDidMount() {
+   // this.getConfigCredentials();
     willFocus = this.props.navigation.addListener(
       'willFocus',
       payload => {
        // if (this.state.isLoading) {
-          this.loadAreas();
+          this.getConfigCredentials();
+          if(this.state.isSet) {
+            this.loadAreas();
+          }
        // }
       }
     );
   }
 
-  loadAreas = () => {
-    const {areas, seed, page} = this.state;
+
+  getConfigCredentials = async() => {
+    try {
+        let configDetails = await AsyncStorage.getItem('configDetails');
+        let parsed = JSON.parse(configDetails);
+        this.setState({
+            ip: parsed.ip,
+            isSet: true,
+        });
+
+        this.loadAreas();
+    } catch (error) {
+        // Error retrieving data
+        console.log(error.message);
+    }
+    return
+}
+
+  loadAreas = async() => {
+
     this.setState({ isLoading: true });
     
-    fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas', {
+    fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas', {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -97,7 +122,7 @@ export default class HomeScreen extends Component {
 
   deleteArea = (item) => {
 
-    fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/areas/' + item.areaId, {
+    fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas/' + item.areaId, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',

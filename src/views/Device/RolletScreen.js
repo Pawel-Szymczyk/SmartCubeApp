@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import { View, Text, StyleSheet, Switch, TouchableOpacity, Image  } from 'react-native';
+import { AsyncStorage, View, Text, StyleSheet, Switch, TouchableOpacity, Image  } from 'react-native';
 
+import AppContext from '../../components/AppContext';
 import Constants from "../../components/Constants";
 
 export default class RolletScreen extends Component {
@@ -15,7 +16,7 @@ export default class RolletScreen extends Component {
           name: '',
 
           switchValue: false,
-
+          ip: '',
           stateValue: 'off',
           actionValue: 'stop',
         };
@@ -26,6 +27,25 @@ export default class RolletScreen extends Component {
         title: navigation.getParam('deviceName', 'Rollet'),
       };
     };
+
+    componentDidMount() {
+        this.getConfigCredentials();
+    }
+
+    getConfigCredentials = async() => {
+        try {
+            let configDetails = await AsyncStorage.getItem('configDetails');
+            let parsed = JSON.parse(configDetails);
+            this.setState({
+                ip: parsed.ip,
+            })
+            
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+        return
+    }
 
     _changeStateValue() {
 
@@ -59,10 +79,11 @@ export default class RolletScreen extends Component {
             // action: this.state.actionValue,
             state: 'on',
             action: event,
+            serialNumber: 'RT000001-CUBE'
           })
         }
     
-        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/devices/rollet', data)
+        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/rollet', data)
         .then((response) => response.json())
         .then((responseJson) => {
           
@@ -77,14 +98,11 @@ export default class RolletScreen extends Component {
 
     render() {
         const { navigation } = this.props;
-
+        
         return (
 
             <View style = {styles.container}>
                 <Text style={{paddingTop: 30, paddingLeft: 10}}>Rollet Description here</Text>
-
-
-
 
                 <View style={styles.box}>
                     <Text style={styles.textBox}>State</Text>

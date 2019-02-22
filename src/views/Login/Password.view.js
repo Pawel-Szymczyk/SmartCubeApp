@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import { ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { AsyncStorage, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
+import AppContext from '../../components/AppContext';
 import Constants from '../../components/Constants';
 
 export default class PasswordScreen extends Component {
@@ -17,7 +18,8 @@ export default class PasswordScreen extends Component {
             userId: this.params.userId,
             authenticationToken: this.params.authenticationToken,
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            ip: ''
         }
     }
 
@@ -27,6 +29,24 @@ export default class PasswordScreen extends Component {
 
     handlePassword2Input = (text) => {
         this.setState({ confirmPassword: text })
+    }
+
+    componentDidMount() {
+        this.getConfigCredentials();
+   }
+
+    getConfigCredentials = async() => {
+        try {
+            let configDetails = await AsyncStorage.getItem('configDetails');
+            let parsed = JSON.parse(configDetails);
+            this.setState({
+                ip: parsed.ip,
+            })
+        } catch (error) {
+            // Error retrieving data
+            console.log(error.message);
+        }
+        return
     }
 
     // TODO: add store asynTonec to asyncStorage functionality...
@@ -49,7 +69,7 @@ export default class PasswordScreen extends Component {
             })
         }
 
-        fetch('http://' + Constants.SERVER_IP + ':' + Constants.PORT + '/api/v1/users/newpassword', data)
+        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/users/newpassword', data)
           .then(response => {
             status = response.status;
             return response.json();
@@ -125,15 +145,6 @@ export default class PasswordScreen extends Component {
 
 
 const styles = StyleSheet.create({
-    // backgoundImg: {
-    //     flex: 1,
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     width: Dimensions.get('window').width,
-    //     height: Dimensions.get('window').height,
-    //     //  opacity: 0.5
-    //    // resizeMode: 'stretch',
-    // },
     container: {
         flex: 1,
         backgroundColor: '#34495e',
@@ -200,3 +211,5 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
 });
+
+PasswordScreen.contextType = AppContext
