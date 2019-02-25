@@ -102,6 +102,8 @@ export default class RegistrationScreen extends Component {
             })
         }
 
+        
+
         fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/users/registration', data)
           .then(response => {
             status = response.status;

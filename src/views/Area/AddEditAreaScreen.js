@@ -70,37 +70,39 @@ export default class AddEditAreaScreen extends Component {
     }
 
     handleSaving = () => {
-        let data = {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
-            },
-            body: JSON.stringify({
-              name: this.state.name,
-              owner: this.state.owner,
-              areaState: this.state.areaState
-            })
-          }
+        // let data = {
+        //     method: 'POST',
+        //     headers: {
+        //       Accept: 'application/json',
+        //       'Content-Type': 'application/json',
+        //       'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+        //     },
+        //     body: JSON.stringify({
+        //       name: this.state.name,
+        //       owner: this.state.owner,  // TODO: owner should be the person creating area
+        //       areaState: this.state.areaState
+        //     })
+        //   }
+
+          alert(this.state.owner)
       
-        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas/create', data)
-          .then(response => {
-            status = response.status;
-            return response.json();
-          })
-          .then((res) => {
+        // fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas/create', data)
+        //   .then(response => {
+        //     status = response.status;
+        //     return response.json();
+        //   })
+        //   .then((res) => {
               
-            if(status === 200) {
-                this.props.navigation.navigate('Home', {isLoading: true});
-            } else {
-                alert(res.error[0].message);
-            }
+        //     if(status === 200) {
+        //         this.props.navigation.navigate('Home', {isLoading: true});
+        //     } else {
+        //         alert(res.error[0].message);
+        //     }
                 
-          })
-          .catch((error) =>{
-            console.error(error);
-          });
+        //   })
+        //   .catch((error) =>{
+        //     console.error(error);
+        //   });
     }
 
     render() {
@@ -113,16 +115,21 @@ export default class AddEditAreaScreen extends Component {
                 <TextInput
                     style = {styles.input}
                     onChangeText = {this.handleName}
+                    placeholder={"ex. Bedroom"}
                 />
                 <FormLabel style = {styles.label}>Owner</FormLabel>
                 <TextInput
                     style = {styles.input}
+                    value={this.context.user.username}
                     onChangeText={this.handleOwner}
+                    // editable={false} 
+                    // selectTextOnFocus={false}
                 />
                 <FormLabel style = {styles.label}>Area State</FormLabel>
                 <TextInput
                     style = {styles.input}
                     onChangeText={this.handleAreaState} 
+                    placeholder={"open/close"}
                 />
 
             </View>

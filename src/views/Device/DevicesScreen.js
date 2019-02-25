@@ -81,6 +81,7 @@ export default class DevicesScreen extends Component {
             var devicesList = [];
             devicesList = devicesList.concat(res.area.rollets);
             devicesList = devicesList.concat(res.area.plugs);
+            devicesList = devicesList.concat(res.area.rgbs); // ?
             
             this.setState({
               devices: devicesList,   
