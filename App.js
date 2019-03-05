@@ -30,6 +30,7 @@ const defaultStyling = {
     headerTintColor: '#fff',
     headerTitleStyle: {
       fontWeight: 'bold',
+      fontFamily: '',
     },
 }
 

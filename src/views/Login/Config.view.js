@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { AsyncStorage, View, Text, Button, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { FormLabel, Header} from 'react-native-elements';
+import { FormLabel, Header, CheckBox, Divider} from 'react-native-elements';
 
 import AppContext from '../../components/AppContext';
 
@@ -13,6 +13,9 @@ export default class ConfigScreen extends Component {
 
         this.state = {
             ip: '',
+            port: '',
+            url: '',
+            checked: false
         }
     }
 
@@ -44,6 +47,9 @@ export default class ConfigScreen extends Component {
             let parsed = JSON.parse(configDetails);
             this.setState({
                 ip: parsed.ip,
+                port: parsed.port,
+                url: parsed.url,
+                checked: parsed.checked
             })
          } catch (error) {
            // Error retrieving data
@@ -56,13 +62,36 @@ export default class ConfigScreen extends Component {
         this.setState({ ip: text })
     }
 
+    handlePort = (text) => {
+        this.setState({ port: text })
+    }
+
+    handleURL = (text) => {
+        this.setState({ url: text })
+    }
+
     handleSaving = async() => {
 
         let obj = {
             ip: this.state.ip,
+            port: this.state.port,
+            url: this.state.url,
+            checked: this.state.checked
         }
 
         try {
+            if(this.state.checked) {
+                if( !this.state.ip || !this.state.port ) {
+                    alert('At least one input is empty')
+                    return false
+                } 
+            } else {
+                if( !this.state.url ) {
+                    alert('At least one input is empty')
+                    return false
+                }
+            }
+
             await AsyncStorage.setItem('configDetails', JSON.stringify(obj));  
         } catch (error) {
            // Error retrieving data
@@ -78,14 +107,47 @@ export default class ConfigScreen extends Component {
 
             <View style = {styles.container}>
 
+                <FormLabel style = {styles.label}>Server URL address:</FormLabel>
+                <TextInput
+                    style = {styles.input}
+                    onChangeText={this.handleURL} 
+                    placeholder='ex. powerful-atoll-10760.herokuapp.com'
+                    value={this.state.url}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                />
+
+                <Divider style={styles.divider} />
+
+                <CheckBox
+                    title='Connect with dev environment'
+                    containerStyle={styles.checkBox}
+                    checked={this.state.checked}
+                    onPress={() => this.setState({checked: !this.state.checked})}
+                />
+
+                <Divider style={styles.divider} />
+
                 <FormLabel style = {styles.label}>IP address:</FormLabel>
                 <TextInput
                     style = {styles.input}
-                    onChangeText={this.handleIP} 
+                    onChangeText={this.handleIP}
+                    placeholder='ex. 192.168.0.1'
                     value={this.state.ip}
                 />
 
+                <FormLabel style = {styles.label}>Port:</FormLabel>
+                <TextInput
+                    style = {styles.input}
+                    onChangeText={this.handlePort} 
+                    placeholder='ex. 3000'
+                    value={this.state.port}
+                    keyboardType='numeric'
+                />
+
             </View>
+
+            
         )
     }
 }
@@ -116,9 +178,20 @@ submitButton: {
     borderWidth: 1,
     borderColor: '#fff',
     },
-    submitButtonText:{
+submitButtonText:{
     color: 'white'
-    }
+    },
+divider: {
+    marginTop: 20,
+    backgroundColor: '#f5f6fa'
+    // marginBottom: 0,
+},
+checkBox: {
+    backgroundColor: '#fff',
+    paddingBottom: 0,
+    marginBottom: 0,
+    borderWidth: 0,
+}
 
 });
 

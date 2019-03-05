@@ -5,6 +5,8 @@ import { CheckBox } from 'react-native-elements'
 import AppContext from '../../components/AppContext';
 import Constants from '../../components/Constants';
 
+import Utils from '../../components/Utilities';
+
 export default class LoginScreen extends Component {
 
     static navigationOptions = {
@@ -18,8 +20,12 @@ export default class LoginScreen extends Component {
             username: '',
             password: '',
             authorizationToken: '',
+            checked: false,
+
+            configCheck: '',
             ip: '',
-            checked: false
+            port: '',
+            url: '',
         }
     }
 
@@ -35,7 +41,8 @@ export default class LoginScreen extends Component {
        // console.log('context', this.context)
         this.getAuthorizationToken();
         this.getLoginCredentials();
-        this.getConfigCredentials();
+        //this.getConfigCredentials();
+
     }
 
     // Set app context object...
@@ -74,19 +81,22 @@ export default class LoginScreen extends Component {
          }
     }
 
-    getConfigCredentials = async() => {
-        try {
-            let configDetails = await AsyncStorage.getItem('configDetails');
-            let parsed = JSON.parse(configDetails);
-            this.setState({
-                ip: parsed.ip,
-            })
-        } catch (error) {
-            // Error retrieving data
-            console.log(error.message);
-        }
-        return
-    }
+    // getConfigCredentials = async() => {
+    //     try {
+    //         let configDetails = await AsyncStorage.getItem('configDetails');
+    //         let parsed = JSON.parse(configDetails);
+    //         this.setState({
+    //             configCheck: parsed.checked,
+    //             ip: parsed.ip,
+    //             port: parsed.port,
+    //             url: parsed.url,
+    //         })
+    //     } catch (error) {
+    //         // Error retrieving data
+    //         console.log(error.message);
+    //     }
+    //     return
+    // }
 
     getLoginCredentials = async() => {
         
@@ -129,35 +139,44 @@ export default class LoginScreen extends Component {
               Accept: 'application/json',
               'Content-Type': 'application/json',
               // set this token to local db
-              'authorizationToken': 'Bearer ' + this.state.authorizationToken
+            //   'authorizationToken': 'Bearer ' + this.state.authorizationToken
+            'authorizationToken': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImZvcm0iOiJtb2JpbGVhcHAiLCJ1c2VybmFtZSI6InJvYiIsInVzZXJUeXBlIjoidXNlciIsImlzVmFsaWQiOiJ0cnVlIn0sImlhdCI6MTU1MTgwOTYxMX0.OzAC5mJ_Kh3ECyuxKFMoO_MyP8RhPeMDNWXluNE1Fo0' 
             },
             body: JSON.stringify({
               username: this.state.username,
               password: this.state.password,
             })
         }
+
+        //Utils.getURL();
+        Utils.postRegistration(data)
+            .then((res) => {
+                
+                //alert(status)
+                alert(res.user.username);
+            });
         
-        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/users/login', data)
-          .then(response => {
-            status = response.status;
-            return response.json();
-          })
-          .then((res) => {
-                if(status === 200) {
-                    // set local settings...
-                    this.setUserObject(res.user);
-                    // close this window and open main...
-                    this.props.navigation.navigate('Home', {isLoading: true});
-                } else {
-                    this.props.navigation.navigate('Login', {isLoading: true});
-                    alert(res.message)
+        // fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/users/login', data)
+        //   .then(response => {
+        //     status = response.status;
+        //     return response.json();
+        //   })
+        //   .then((res) => {
+        //         if(status === 200) {
+        //             // set local settings...
+        //             this.setUserObject(res.user);
+        //             // close this window and open main...
+        //             this.props.navigation.navigate('Home', {isLoading: true});
+        //         } else {
+        //             this.props.navigation.navigate('Login', {isLoading: true});
+        //             alert(res.message)
                    
-                }
-          })
-          .catch((error) =>{
-            //console.error(error);
-            alert(error);
-          });
+        //         }
+        //   })
+        //   .catch((error) =>{
+        //     //console.error(error);
+        //     alert(error);
+        //   });
     }
 
     handleForgetPassword = () => {
@@ -170,6 +189,8 @@ export default class LoginScreen extends Component {
 
 
     render() {
+
+        
         const {navigate} = this.props.navigation;
         return (
             <ImageBackground source={require('../../images/darkcubesVertical3.png')} style={styles.backgoundImg} blurRadius={0.4}>
