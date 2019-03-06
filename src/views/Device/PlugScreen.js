@@ -18,7 +18,6 @@ export default class PlugScreen extends Component {
           deviceId: this.params.deviceId,
           plugData: [],
           plugState: false,
-         // ip: '',
           isSet: false
         };
 
@@ -30,24 +29,9 @@ export default class PlugScreen extends Component {
       };
     };
 
-    // getConfigCredentials = async() => {
-    //     try {
-    //         let configDetails = await AsyncStorage.getItem('configDetails');
-    //         let parsed = JSON.parse(configDetails);
-    //         this.setState({
-    //             ip: parsed.ip,
-    //             isSet: true,
-    //         })
-    //     } catch (error) {
-    //         // Error retrieving data
-    //         console.log(error.message);
-    //     }
-    //     return
-    // }
 
-        // load data from server
+    // load data from server
     componentDidMount() {
-      //  this.getConfigCredentials();
         if(this.state.isSet) {
 
             this.setState({ isLoading: true });
@@ -69,12 +53,9 @@ export default class PlugScreen extends Component {
             .catch((error) => {
                 alert(error);
             });
-    
-          
 
         }
     }
-
 
 
     // send message to the server
@@ -111,9 +92,6 @@ export default class PlugScreen extends Component {
           .catch((error) => {
               alert(error);
           });
-
-          
-      
 
     };
 
