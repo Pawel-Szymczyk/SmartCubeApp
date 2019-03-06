@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { AsyncStorage, View, Text, StyleSheet, Switch, TouchableOpacity, Image  } from 'react-native';
 
 import AppContext from '../../components/AppContext';
-import Constants from "../../components/Constants";
+import Utilities from '../../components/Utilities';
 
 export default class RolletScreen extends Component {
 
@@ -16,7 +16,6 @@ export default class RolletScreen extends Component {
           name: '',
 
           switchValue: false,
-          ip: '',
           stateValue: 'off',
           actionValue: 'stop',
         };
@@ -29,23 +28,23 @@ export default class RolletScreen extends Component {
     };
 
     componentDidMount() {
-        this.getConfigCredentials();
+        //this.getConfigCredentials();
     }
 
-    getConfigCredentials = async() => {
-        try {
-            let configDetails = await AsyncStorage.getItem('configDetails');
-            let parsed = JSON.parse(configDetails);
-            this.setState({
-                ip: parsed.ip,
-            })
+    // getConfigCredentials = async() => {
+    //     try {
+    //         let configDetails = await AsyncStorage.getItem('configDetails');
+    //         let parsed = JSON.parse(configDetails);
+    //         this.setState({
+    //             ip: parsed.ip,
+    //         })
             
-        } catch (error) {
-            // Error retrieving data
-            console.log(error.message);
-        }
-        return
-    }
+    //     } catch (error) {
+    //         // Error retrieving data
+    //         console.log(error.message);
+    //     }
+    //     return
+    // }
 
     _changeStateValue() {
 
@@ -82,16 +81,26 @@ export default class RolletScreen extends Component {
             serialNumber: 'RT000001-CUBE'
           })
         }
-    
-        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/rollet', data)
-        .then((response) => response.json())
-        .then((responseJson) => {
-          
-    
+
+        Utilities.serverRequest(`/api/v1/devices/rollet`, data)
+        .then((res) => {
+            // this.setState({
+            //     plugState: res.state
+            // });
         })
         .catch((error) => {
-          console.error(error);
+            alert(error);
         });
+    
+        // fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/rollet', data)
+        // .then((response) => response.json())
+        // .then((responseJson) => {
+          
+    
+        // })
+        // .catch((error) => {
+        //   console.error(error);
+        // });
   
     }
 

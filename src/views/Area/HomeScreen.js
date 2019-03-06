@@ -42,25 +42,6 @@ export default class HomeScreen extends Component {
     };
   };
 
-
-  // handleRefresh = () => {
-  //   this.setState({
-  //     seed: this.state.seed + 1,
-  //     isRefreshing: true,
-  //   }, () => {
-  //     this.loadAreas();
-  //   });
-  // };
-
-  // handleLoadMore = () => {
-  //   this.setState({
-  //     page: this.state.page + 1,
-  //   }, () => {
-  //     this.loadAreas();
-  //   });
-  // };
-
-
   componentDidMount() {
     willFocus = this.props.navigation.addListener(
       'willFocus',
@@ -113,7 +94,6 @@ export default class HomeScreen extends Component {
         alert("Area removed successfuly");
       })
       .catch((error) => {
-          // this.props.navigation.navigate('Login', {isLoading: true});
           console.log(error)
           alert(error);
       });

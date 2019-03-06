@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { AsyncStorage, View, Text, StyleSheet, Switch, TouchableOpacity, FlatList  } from 'react-native';
 
 import AppContext from '../../components/AppContext';
-import Constants from "../../components/Constants";
+import Utilities from '../../components/Utilities';
 
 
 export default class PlugScreen extends Component {
@@ -18,7 +18,7 @@ export default class PlugScreen extends Component {
           deviceId: this.params.deviceId,
           plugData: [],
           plugState: false,
-          ip: '',
+         // ip: '',
           isSet: false
         };
 
@@ -30,49 +30,47 @@ export default class PlugScreen extends Component {
       };
     };
 
-    getConfigCredentials = async() => {
-        try {
-            let configDetails = await AsyncStorage.getItem('configDetails');
-            let parsed = JSON.parse(configDetails);
-            this.setState({
-                ip: parsed.ip,
-                isSet: true,
-            })
-        } catch (error) {
-            // Error retrieving data
-            console.log(error.message);
-        }
-        return
-    }
+    // getConfigCredentials = async() => {
+    //     try {
+    //         let configDetails = await AsyncStorage.getItem('configDetails');
+    //         let parsed = JSON.parse(configDetails);
+    //         this.setState({
+    //             ip: parsed.ip,
+    //             isSet: true,
+    //         })
+    //     } catch (error) {
+    //         // Error retrieving data
+    //         console.log(error.message);
+    //     }
+    //     return
+    // }
 
         // load data from server
     componentDidMount() {
-        this.getConfigCredentials();
+      //  this.getConfigCredentials();
         if(this.state.isSet) {
-        
-        
-
 
             this.setState({ isLoading: true });
-    
-            fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/plug/'+ this.params.deviceId, {
+
+            let data = {
                 headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                  'authenticationToken': `Bearer ${this.context.user.authenticationToken}`
                 },
-                })
-                .then(res => res.json())
-                .then(res => {
+              }
 
-                    this.setState({
-                        plugState: res.powerState
-                    });
-
-                })
-                .catch(err => {
-                    console.error(err);
-                })
+            Utilities.serverRequest(`/api/v1/devices/plug/${this.params.deviceId}`, data)
+            .then((res) => {
+                this.setState({
+                    plugState: res.powerState
+                });
+            })
+            .catch((error) => {
+                alert(error);
+            });
+    
+          
 
         }
     }
@@ -104,20 +102,18 @@ export default class PlugScreen extends Component {
             })
           };
 
-          
-          // add device serial number to url
-          fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/plug', data)
-          .then((response) => response.json())
-          .then((responseJson) => {
-
-            this.setState({
-                plugState: responseJson.state
-            });
-  
+          Utilities.serverRequest(`/api/v1/devices/plug`, data)
+          .then((res) => {
+              this.setState({
+                  plugState: res.state
+              });
           })
-          .catch((error) =>{
-            console.error(error);
+          .catch((error) => {
+              alert(error);
           });
+
+          
+      
 
     };
 

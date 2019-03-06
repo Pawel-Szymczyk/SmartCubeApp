@@ -4,7 +4,8 @@ import { ListItem, Icon } from 'react-native-elements';
 import Swipeable from 'react-native-swipeable';
 
 import AppContext from '../../components/AppContext';
-import Constants from "../../components/Constants";
+//import Constants from "../../components/Constants";
+import Utilities from '../../components/Utilities';
 
 let willfocus = null;
 
@@ -19,7 +20,7 @@ export default class DevicesScreen extends Component {
             areaId: this.params.areaId,
             devices: [],
             isLoading: false,
-            ip: '',
+            // ip: '',
             isSet: false
         };
     }
@@ -39,45 +40,45 @@ export default class DevicesScreen extends Component {
         'willFocus',
         payload => {
          // if (this.state.isLoading) {
-          
-          this.getConfigCredentials();
-          if(this.state.isSet) {
-            this.loadDevices();
-          }
+          this.loadDevices();
+          // this.getConfigCredentials();
+          // if(this.state.isSet) {
+          //   this.loadDevices();
+          // }
          // }
         }
       );
     }
 
-    getConfigCredentials = async() => {
-      try {
-          let configDetails = await AsyncStorage.getItem('configDetails');
-          let parsed = JSON.parse(configDetails);
-          this.setState({
-              ip: parsed.ip,
-              isSet: true,
-          })
-          this.loadDevices();
-      } catch (error) {
-          // Error retrieving data
-          console.log(error.message);
-      }
-      return
-    }
+    // getConfigCredentials = async() => {
+    //   try {
+    //       let configDetails = await AsyncStorage.getItem('configDetails');
+    //       let parsed = JSON.parse(configDetails);
+    //       this.setState({
+    //           ip: parsed.ip,
+    //           isSet: true,
+    //       })
+    //       this.loadDevices();
+    //   } catch (error) {
+    //       // Error retrieving data
+    //       console.log(error.message);
+    //   }
+    //   return
+    // }
     
     loadDevices = () => {
         this.setState({ isLoading: true });
- 
-        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas/' + this.params.areaId, {
+
+        let data = {
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
-            'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+            'authenticationToken': `Bearer ${this.context.user.authenticationToken}`
           },
-        })
-        .then(res => res.json())
-        .then(res => {
+        }
 
+        Utilities.serverRequest(`/api/v1/areas/${this.params.areaId}`, data)
+        .then((res) => {
             var devicesList = [];
             devicesList = devicesList.concat(res.area.rollets);
             devicesList = devicesList.concat(res.area.plugs);
@@ -87,31 +88,75 @@ export default class DevicesScreen extends Component {
               isLoading: false,
             });
         })
-        .catch(err => {
-            console.error(err);
-        })
+        .catch((error) => {
+            // this.props.navigation.navigate('Login', {isLoading: true});
+            console.log(error)
+            alert(error);
+        });
+ 
+        // fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas/' + this.params.areaId, {
+        //   headers: {
+        //     Accept: 'application/json',
+        //     'Content-Type': 'application/json',
+        //     'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+        //   },
+        // })
+        // .then(res => res.json())
+        // .then(res => {
+
+        //     var devicesList = [];
+        //     devicesList = devicesList.concat(res.area.rollets);
+        //     devicesList = devicesList.concat(res.area.plugs);
+            
+        //     this.setState({
+        //       devices: devicesList,   
+        //       isLoading: false,
+        //     });
+        // })
+        // .catch(err => {
+        //     console.error(err);
+        // })
     };
 
     deleteDevice = (item) => {
 
-      fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/' + item.type + '/delete/' + item.id, {
+      // fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/' + item.type + '/delete/' + item.id, {
+      //   method: 'DELETE',
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/json',
+      //     'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+      //   },
+      // })
+      // .then(res => res.json())
+      // .then(res => {
+  
+      //   this.loadDevices();
+  
+      //   alert( item.type + " removed successfuly");
+      // })
+      // .catch(err => {
+      //   console.error(err);
+      // })
+
+      let data = {
         method: 'DELETE',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+          'authenticationToken': `Bearer ${this.context.user.authenticationToken}`
         },
-      })
-      .then(res => res.json())
-      .then(res => {
+      }
   
-        this.loadDevices();
-  
-        alert( item.type + " removed successfuly");
-      })
-      .catch(err => {
-        console.error(err);
-      })
+      Utilities.serverRequest(`/api/v1/devices/${item.type}/delete/${item.id}`, data)
+        .then((res) => {
+          this.loadDevices();
+          alert( `${item.type} removed successfuly`);
+        })
+        .catch((error) => {
+            console.log(error)
+            alert(error);
+        });
   
     };
 
