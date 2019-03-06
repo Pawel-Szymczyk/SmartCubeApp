@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {AsyncStorage, ActivityIndicator, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
 import AppContext from '../../components/AppContext';
-import Constants from '../../components/Constants';
-
 import Utilities from '../../components/Utilities';
 
 export default class RegistrationScreen extends Component {
@@ -23,11 +21,6 @@ export default class RegistrationScreen extends Component {
             secretAnswer: '',
             password: '',
             confirmPassword: '',
-
-            configCheck: '',
-            ip: '',
-            port: '',
-            url: '',
         }
     }
 
@@ -59,10 +52,6 @@ export default class RegistrationScreen extends Component {
         this.setState({ confirmPassword: text })
     }
 
-    componentDidMount() {
-        this.getConfigCredentials();
-    }
-
     storeAuthorizationToken = async (token) => {
         try {
            await AsyncStorage.setItem('authorizationToken', token);
@@ -71,39 +60,9 @@ export default class RegistrationScreen extends Component {
           // Error retrieving data
           console.log(error.message);
         }
-      };
-
-    getConfigCredentials = async() => {
-        try {
-            let configDetails = await AsyncStorage.getItem('configDetails');
-            let parsed = JSON.parse(configDetails);
-            //alert(parsed.checked)
-            this.setState({
-                configCheck: parsed.checked,
-                ip: parsed.ip,
-                port: parsed.port,
-                url: parsed.url,
-            })
-        } catch (error) {
-            // Error retrieving data
-            console.log(error.message);
-        }
-        return
-    }
-
-    getURL = () => {
-        //let fetchURL;
-
-        if(!this.state.configCheck) {
-            return 'https://' + this.state.url
-        } else {
-            return 'http://' + this.state.ip + ':' + this.state.port
-        }
-    }
+      };      
 
     handleRegistration = () => {
-
-        let status;
 
         let data = {
             method: 'POST',
@@ -122,30 +81,19 @@ export default class RegistrationScreen extends Component {
             })
         }
 
-        alert(`${this.getURL()}/api/v1/users/registration`)
-
-        // fetch(`${this.getURL()}/api/v1/users/registration`, data)
-        //   .then(response => {
-        //     status = response.status;
-        //     return response.json();
-        //   })
-        //   .then((res) => {
-        //       alert(status)
-        //         if(status === 200) {
-
-        //             this.storeAuthorizationToken(res.authorizationToken);
-        //             // set local settings...
-        //             //this.setUserObject(res.user);
-        //             // close this window and open main...
-        //             this.props.navigation.navigate('Login', {isLoading: true});
-        //         } else {
-        //             alert(res[0].message)
-        //         }
-        //   })
-        //   .catch((error) =>{
-        //     alert(error);
-        //   });
-
+        Utilities.serverRequest('/api/v1/users/registration', data)
+            .then((res) => {
+                console.log(res)
+                this.storeAuthorizationToken(res.authorizationToken);
+                // close this window and open main...
+                this.props.navigation.navigate('Login', {isLoading: true});
+            })
+            .catch((error) => {
+                // this.props.navigation.navigate('Login', {isLoading: true});
+                // alert(error[0].message);
+                // TODO:
+                console.log(error)
+            });
     }
 
     render() {

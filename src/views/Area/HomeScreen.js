@@ -4,7 +4,7 @@ import { ListItem, Icon } from 'react-native-elements'
 import Swipeable from 'react-native-swipeable';
 
 import AppContext from '../../components/AppContext';
-import Constants from "../../components/Constants";
+import Utilities from '../../components/Utilities';
 
 let willfocus = null;
 
@@ -15,7 +15,6 @@ export default class HomeScreen extends Component {
     this.navigate = this.props.navigation.navigate;
 
     this.state = {
-      ip: '',
       seed: 1,
       page: 1,
       areas: [],
@@ -30,7 +29,6 @@ export default class HomeScreen extends Component {
   static navigationOptions = ({navigation}) => {
     
     return {
-      //headerTitle: <Logo />,
       headerLeft: (
         <TouchableOpacity onPress={() => navigation.openDrawer()} >
           <Icon
@@ -41,7 +39,6 @@ export default class HomeScreen extends Component {
           />
         </TouchableOpacity>
       ),
-      
     };
   };
 
@@ -65,81 +62,61 @@ export default class HomeScreen extends Component {
 
 
   componentDidMount() {
-   // this.getConfigCredentials();
     willFocus = this.props.navigation.addListener(
       'willFocus',
       payload => {
-       // if (this.state.isLoading) {
-          this.getConfigCredentials();
-          if(this.state.isSet) {
-            this.loadAreas();
-          }
-       // }
+        this.loadAreas();
       }
     );
   }
 
-
-  getConfigCredentials = async() => {
-    try {
-        let configDetails = await AsyncStorage.getItem('configDetails');
-        let parsed = JSON.parse(configDetails);
-        this.setState({
-            ip: parsed.ip,
-            isSet: true,
-        });
-
-        this.loadAreas();
-    } catch (error) {
-        // Error retrieving data
-        console.log(error.message);
-    }
-    return
-}
-
   loadAreas = async() => {
 
     this.setState({ isLoading: true });
-    
-    fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas', {
+    let data = {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+        'authenticationToken': `Bearer ${this.context.user.authenticationToken}`
       },
-    })
-    .then(res => res.json())
-    .then(res => {
-      this.setState({
-        areas: res.areas,
-        isLoading: false,
+    }
+
+    Utilities.serverRequest('/api/v1/areas', data)
+      .then((res) => {
+        this.setState({
+          areas: res.areas,
+          isLoading: false,
+        })
+      })
+      .catch((error) => {
+          // this.props.navigation.navigate('Login', {isLoading: true});
+          console.log(error)
+          alert(error);
       });
-    })
-    .catch(err => {
-      console.error(err);
-    })
+    
   };
 
   deleteArea = (item) => {
 
-    fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas/' + item.areaId, {
+    let data = {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+        'authenticationToken': `Bearer ${this.context.user.authenticationToken}`
       },
-    })
-    .then(res => res.json())
-    .then(res => {
+    }
 
-      this.loadAreas();
-
-      alert("Area removed successfuly");
-    })
-    .catch(err => {
-      console.error(err);
-    })
+    Utilities.serverRequest(`/api/v1/areas/${item.areaId}`, data)
+      .then((res) => {
+        this.loadAreas();
+        alert("Area removed successfuly");
+      })
+      .catch((error) => {
+          // this.props.navigation.navigate('Login', {isLoading: true});
+          console.log(error)
+          alert(error);
+      });
 
   };
 
@@ -147,12 +124,14 @@ export default class HomeScreen extends Component {
     this.navigate("AddEditArea", {
       name: 'Edit Area',
       areaId: item.areaId,
+      isEdit: true
     });
   }
 
   handleAddArea() {
     this.navigate("AddEditArea", {
-      name: 'Add Area'
+      name: 'Add Area',
+      isEdit: false
     });
   }
 
@@ -162,8 +141,6 @@ export default class HomeScreen extends Component {
       areaName: item.name
     });
   }
-
-  
 
   render() {
     const { areas } = this.state;
@@ -243,7 +220,6 @@ export default class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   scene: {
-   // justifyContent: 'center',
     flex: 1,
     backgroundColor: '#fff',
   },

@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import { AsyncStorage, View, Text, Button, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { FormLabel, Header} from 'react-native-elements';
+import { AsyncStorage, View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { FormLabel } from 'react-native-elements';
 
-import Constants from "../../components/Constants";
 import AppContext from '../../components/AppContext';
-
+import Utilities from '../../components/Utilities';
 
 export default class AddEditAreaScreen extends Component {
 
@@ -13,13 +12,13 @@ export default class AddEditAreaScreen extends Component {
         this.params = this.props.navigation.state.params;
 
         this.state = {
+            areaId: this.params.areaId,
+            isEdit: this.params.isEdit,
             name: '',
             owner: '',
             areaState: '',
-            ip: ''
         }
     }
-
 
     // Header
     static navigationOptions = ({navigation}) => {
@@ -39,22 +38,48 @@ export default class AddEditAreaScreen extends Component {
     };
 
     componentDidMount() {
-        this.getConfigCredentials();
         this.props.navigation.setParams({handleSave: () => this.handleSaving()});
+        this.loadData();
     }
 
-    getConfigCredentials = async() => {
-        try {
-            let configDetails = await AsyncStorage.getItem('configDetails');
-            let parsed = JSON.parse(configDetails);
+    loadData = () => {
+        if(this.state.isEdit) {
+            
+            this.methodRequest = 'PUT';
+            this.url = `/api/v1/areas/${this.state.areaId}`
+            
+            // get area
+            let data = {
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                  'authenticationToken': `Bearer ${this.context.user.authenticationToken}`
+                },
+              }
+          
+              Utilities.serverRequest(`/api/v1/areas/${this.state.areaId}`, data)
+                .then((res) => {
+                    // alert(res.area.name)
+                  this.setState({
+                    name: res.area.name,
+                    owner: res.area.owner,
+                    areaState: res.area.areaState
+                  })
+                })
+                .catch((error) => {
+                    // this.props.navigation.navigate('Login', {isLoading: true});
+                    console.log(error)
+                    alert(error);
+                });
+
+        } else {
+            this.methodRequest = 'POST';
+            this.url = '/api/v1/areas/create'
+
             this.setState({
-                ip: parsed.ip,
+                owner: this.context.user.username
             })
-        } catch (error) {
-            // Error retrieving data
-            console.log(error.message);
         }
-        return
     }
 
     handleName = (text) => {
@@ -70,40 +95,34 @@ export default class AddEditAreaScreen extends Component {
     }
 
     handleSaving = () => {
+
         let data = {
-            method: 'POST',
+            method: this.methodRequest,
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
+              'authenticationToken': `Bearer ${this.context.user.authenticationToken}`
             },
             body: JSON.stringify({
               name: this.state.name,
               owner: this.state.owner,
               areaState: this.state.areaState
             })
-          }
-      
-        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas/create', data)
-          .then(response => {
-            status = response.status;
-            return response.json();
-          })
-          .then((res) => {
-              
-            if(status === 200) {
+        }
+
+        Utilities.serverRequest(this.url, data)
+            .then((res) => {
+                // close this window and open main...
                 this.props.navigation.navigate('Home', {isLoading: true});
-            } else {
-                alert(res.error[0].message);
-            }
-                
-          })
-          .catch((error) =>{
-            console.error(error);
-          });
+            })
+            .catch((error) => {
+                alert(error);
+            });
+      
     }
 
     render() {
+        
         const { navigation } = this.props;
         return (
 
@@ -112,17 +131,24 @@ export default class AddEditAreaScreen extends Component {
                 <FormLabel style = {styles.label}>Area Name</FormLabel>
                 <TextInput
                     style = {styles.input}
-                    onChangeText = {this.handleName}
+                    onChangeText={(text) => this.setState({name: text})}
+                    placeholder='ex. Bedroom'
+                    value={this.state.name}
                 />
                 <FormLabel style = {styles.label}>Owner</FormLabel>
                 <TextInput
                     style = {styles.input}
-                    onChangeText={this.handleOwner}
+                    onChangeText={(text) => this.setState({owner: text})}
+                    placeholder='ex. Username'
+                    value={this.state.owner}
+                    editable={false} 
                 />
                 <FormLabel style = {styles.label}>Area State</FormLabel>
                 <TextInput
                     style = {styles.input}
-                    onChangeText={this.handleAreaState} 
+                    onChangeText={(text) => this.setState({areaState: text})}
+                    placeholder='Opened or Closed'
+                    value={this.state.areaState}
                 />
 
             </View>
@@ -131,35 +157,34 @@ export default class AddEditAreaScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-container: {
-    flex: 1
-},
-label: {
-    fontSize: 20,
-},
-input: {
-    height: 30,
-    padding: 0,
-    paddingLeft: 5,
-    paddingRight: 5,
-    marginLeft: 15,
-    marginRight: 15,
-    color: '#000',
-    borderBottomWidth: 1,
-    backgroundColor: '#fff',
-},
-submitButton: {
-    padding: 10,
-    margin: 15,
-    height: 40,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#fff',
+    container: {
+        flex: 1
+    },
+    label: {
+        fontSize: 20,
+    },
+    input: {
+        height: 30,
+        padding: 0,
+        paddingLeft: 5,
+        paddingRight: 5,
+        marginLeft: 15,
+        marginRight: 15,
+        color: '#000',
+        borderBottomWidth: 1,
+        backgroundColor: '#fff',
+    },
+    submitButton: {
+        padding: 10,
+        margin: 15,
+        height: 40,
+        borderRadius: 6,
+        borderWidth: 1,
+        borderColor: '#fff',
     },
     submitButtonText:{
-    color: 'white'
-    }
-
+        color: 'white'
+    },
 });
 
 AddEditAreaScreen.contextType = AppContext

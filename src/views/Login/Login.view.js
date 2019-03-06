@@ -3,9 +3,7 @@ import { AsyncStorage, ActivityIndicator, View, Text, StyleSheet, TextInput, Ima
 import { CheckBox } from 'react-native-elements'
 
 import AppContext from '../../components/AppContext';
-import Constants from '../../components/Constants';
-
-import Utils from '../../components/Utilities';
+import Utilities from '../../components/Utilities';
 
 export default class LoginScreen extends Component {
 
@@ -21,11 +19,6 @@ export default class LoginScreen extends Component {
             password: '',
             authorizationToken: '',
             checked: false,
-
-            configCheck: '',
-            ip: '',
-            port: '',
-            url: '',
         }
     }
 
@@ -38,15 +31,13 @@ export default class LoginScreen extends Component {
     }
 
     componentDidMount() {
-       // console.log('context', this.context)
         this.getAuthorizationToken();
         this.getLoginCredentials();
-        //this.getConfigCredentials();
-
     }
 
     // Set app context object...
     setUserObject = (obj) => {
+        //alert(obj.authenticationToken)
         this.context.authenticate(obj);
     }
 
@@ -80,23 +71,6 @@ export default class LoginScreen extends Component {
            console.log(error.message);
          }
     }
-
-    // getConfigCredentials = async() => {
-    //     try {
-    //         let configDetails = await AsyncStorage.getItem('configDetails');
-    //         let parsed = JSON.parse(configDetails);
-    //         this.setState({
-    //             configCheck: parsed.checked,
-    //             ip: parsed.ip,
-    //             port: parsed.port,
-    //             url: parsed.url,
-    //         })
-    //     } catch (error) {
-    //         // Error retrieving data
-    //         console.log(error.message);
-    //     }
-    //     return
-    // }
 
     getLoginCredentials = async() => {
         
@@ -132,15 +106,12 @@ export default class LoginScreen extends Component {
     handleLogin = () => {
         this.checkValidation();
 
-        let status;
         let data = {
             method: 'POST',
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              // set this token to local db
-            //   'authorizationToken': 'Bearer ' + this.state.authorizationToken
-            'authorizationToken': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImZvcm0iOiJtb2JpbGVhcHAiLCJ1c2VybmFtZSI6InJvYiIsInVzZXJUeXBlIjoidXNlciIsImlzVmFsaWQiOiJ0cnVlIn0sImlhdCI6MTU1MTgwOTYxMX0.OzAC5mJ_Kh3ECyuxKFMoO_MyP8RhPeMDNWXluNE1Fo0' 
+              'authorizationToken': `Bearer ${this.state.authorizationToken}`
             },
             body: JSON.stringify({
               username: this.state.username,
@@ -148,35 +119,17 @@ export default class LoginScreen extends Component {
             })
         }
 
-        //Utils.getURL();
-        Utils.postRegistration(data)
+        Utilities.serverRequest('/api/v1/users/login', data)
             .then((res) => {
-                
-                //alert(status)
-                alert(res.user.username);
+                // set local settings...
+               this.setUserObject(res.user);
+                // close this window and open main...
+               this.props.navigation.navigate('Home', {isLoading: true});
+            })
+            .catch((error) => {
+                // this.props.navigation.navigate('Login', {isLoading: true});
+                alert(error);
             });
-        
-        // fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/users/login', data)
-        //   .then(response => {
-        //     status = response.status;
-        //     return response.json();
-        //   })
-        //   .then((res) => {
-        //         if(status === 200) {
-        //             // set local settings...
-        //             this.setUserObject(res.user);
-        //             // close this window and open main...
-        //             this.props.navigation.navigate('Home', {isLoading: true});
-        //         } else {
-        //             this.props.navigation.navigate('Login', {isLoading: true});
-        //             alert(res.message)
-                   
-        //         }
-        //   })
-        //   .catch((error) =>{
-        //     //console.error(error);
-        //     alert(error);
-        //   });
     }
 
     handleForgetPassword = () => {
@@ -189,8 +142,6 @@ export default class LoginScreen extends Component {
 
 
     render() {
-
-        
         const {navigate} = this.props.navigation;
         return (
             <ImageBackground source={require('../../images/darkcubesVertical3.png')} style={styles.backgoundImg} blurRadius={0.4}>
@@ -237,7 +188,7 @@ export default class LoginScreen extends Component {
                         />
 
                         <CheckBox
-                            containerStyle={{backgroundColor: 'transparent', color: '#fff', marginBottom: 15, borderWidth: 0}}
+                            containerStyle={{backgroundColor: 'transparent', marginBottom: 15, borderWidth: 0}}
                             center
                             textStyle={{color: '#fff'}}
                             title='Remeber Login'

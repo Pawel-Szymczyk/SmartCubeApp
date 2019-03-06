@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { AsyncStorage, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
 import AppContext from '../../components/AppContext';
-import Constants from '../../components/Constants';
+import Utilities from '../../components/Utilities';
 
 export default class ForgetPasswordScreen extends Component {
 
@@ -57,28 +57,18 @@ export default class ForgetPasswordScreen extends Component {
                 secretAnswer: this.state.secretAnswer
             })
         }
-        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/users/resetpassword', data)
-          .then(response => {
-            status = response.status;
-            return response.json();
-          })
-          .then((res) => {
-                if(status === 200) {
-                    this.props.navigation.navigate(
-                        'Password', {
-                            isLoading: true, 
-                            userId: res.userId, 
-                            authenticationToken: res.authenticationToken
-                        });
-                } else {
-                    alert('error here')
-                }
-          })
-          .catch((error) =>{
-            //console.error(error);
-            alert(error);
-          });
-
+        Utilities.serverRequest('/api/v1/users/resetpassword', data)
+            .then((res) => {
+                this.props.navigation.navigate(
+                    'Password', {
+                        isLoading: true, 
+                        userId: res.userId, 
+                        authenticationToken: res.authenticationToken
+                    });
+            })
+            .catch((error) => {
+                alert(error)
+            });
     }
 
     render() {
@@ -162,7 +152,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 30,
         textAlign: 'center',
-        
     },
     input: {
         height: 40,

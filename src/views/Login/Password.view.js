@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { AsyncStorage, View, Text, StyleSheet, TextInput, Image, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 
 import AppContext from '../../components/AppContext';
-import Constants from '../../components/Constants';
+import Utilities from '../../components/Utilities';
 
 export default class PasswordScreen extends Component {
 
@@ -33,7 +33,7 @@ export default class PasswordScreen extends Component {
 
     componentDidMount() {
         this.getConfigCredentials();
-   }
+    }
 
     getConfigCredentials = async() => {
         try {
@@ -49,18 +49,13 @@ export default class PasswordScreen extends Component {
         return
     }
 
-    // TODO: add store asynTonec to asyncStorage functionality...
-
     handleRegistration = () => {
-
-        let status;
-
         let data = {
             method: 'PUT',
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              'authenticationToken': 'Bearer ' + this.state.authenticationToken
+              'authenticationToken': `Bearer ${this.state.authenticationToken}`
             },
             body: JSON.stringify({
                 id: this.state.userId,
@@ -69,24 +64,13 @@ export default class PasswordScreen extends Component {
             })
         }
 
-        fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/users/newpassword', data)
-          .then(response => {
-            status = response.status;
-            return response.json();
-          })
-          .then((res) => {
-                if(status === 200) {
-                    this.props.navigation.navigate('Login', {isLoading: true});
-                   // alert("works")
-                } else {
-                    alert(res[0].message)
-                }
-          })
-          .catch((error) =>{
-            //console.error(error);
-            alert(error);
-          });
-
+        Utilities.serverRequest('/api/v1/users/newpassword', data)
+            .then((res) => {
+                this.props.navigation.navigate('Login', {isLoading: true});
+            })
+            .catch((error) => {
+                alert(error.message)
+            });
     }
 
     render() {
@@ -174,7 +158,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     formContainer: {
-        // flex: 1,
        flexGrow: 2,
     },
     subtitle: {
@@ -183,7 +166,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 30,
         textAlign: 'center',
-        
     },
     input: {
         height: 40,
