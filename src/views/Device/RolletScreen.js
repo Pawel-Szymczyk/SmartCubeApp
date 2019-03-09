@@ -28,23 +28,8 @@ export default class RolletScreen extends Component {
     };
 
     componentDidMount() {
-        //this.getConfigCredentials();
     }
 
-    // getConfigCredentials = async() => {
-    //     try {
-    //         let configDetails = await AsyncStorage.getItem('configDetails');
-    //         let parsed = JSON.parse(configDetails);
-    //         this.setState({
-    //             ip: parsed.ip,
-    //         })
-            
-    //     } catch (error) {
-    //         // Error retrieving data
-    //         console.log(error.message);
-    //     }
-    //     return
-    // }
 
     _changeStateValue() {
 
@@ -89,18 +74,10 @@ export default class RolletScreen extends Component {
             // });
         })
         .catch((error) => {
-            alert(error);
+            this.props.navigation.navigate('Login', {isLoading: true});
+           // alert(error);
         });
-    
-        // fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/rollet', data)
-        // .then((response) => response.json())
-        // .then((responseJson) => {
-          
-    
-        // })
-        // .catch((error) => {
-        //   console.error(error);
-        // });
+
   
     }
 

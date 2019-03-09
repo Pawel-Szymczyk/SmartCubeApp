@@ -4,7 +4,6 @@ import { ListItem, Icon } from 'react-native-elements';
 import Swipeable from 'react-native-swipeable';
 
 import AppContext from '../../components/AppContext';
-//import Constants from "../../components/Constants";
 import Utilities from '../../components/Utilities';
 
 let willfocus = null;
@@ -20,7 +19,6 @@ export default class DevicesScreen extends Component {
             areaId: this.params.areaId,
             devices: [],
             isLoading: false,
-            // ip: '',
             isSet: false
         };
     }
@@ -50,21 +48,7 @@ export default class DevicesScreen extends Component {
       );
     }
 
-    // getConfigCredentials = async() => {
-    //   try {
-    //       let configDetails = await AsyncStorage.getItem('configDetails');
-    //       let parsed = JSON.parse(configDetails);
-    //       this.setState({
-    //           ip: parsed.ip,
-    //           isSet: true,
-    //       })
-    //       this.loadDevices();
-    //   } catch (error) {
-    //       // Error retrieving data
-    //       console.log(error.message);
-    //   }
-    //   return
-    // }
+
     
     loadDevices = () => {
         this.setState({ isLoading: true });
@@ -89,55 +73,15 @@ export default class DevicesScreen extends Component {
             });
         })
         .catch((error) => {
-            // this.props.navigation.navigate('Login', {isLoading: true});
-            console.log(error)
-            alert(error);
+            this.props.navigation.navigate('Login', {isLoading: true});
+            //console.log(error)
+            //alert(error);
         });
  
-        // fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/areas/' + this.params.areaId, {
-        //   headers: {
-        //     Accept: 'application/json',
-        //     'Content-Type': 'application/json',
-        //     'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
-        //   },
-        // })
-        // .then(res => res.json())
-        // .then(res => {
 
-        //     var devicesList = [];
-        //     devicesList = devicesList.concat(res.area.rollets);
-        //     devicesList = devicesList.concat(res.area.plugs);
-            
-        //     this.setState({
-        //       devices: devicesList,   
-        //       isLoading: false,
-        //     });
-        // })
-        // .catch(err => {
-        //     console.error(err);
-        // })
     };
 
     deleteDevice = (item) => {
-
-      // fetch('http://' + this.state.ip + ':' + Constants.PORT + '/api/v1/devices/' + item.type + '/delete/' + item.id, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     Accept: 'application/json',
-      //     'Content-Type': 'application/json',
-      //     'authenticationToken': 'Bearer ' + this.context.user.authenticationToken
-      //   },
-      // })
-      // .then(res => res.json())
-      // .then(res => {
-  
-      //   this.loadDevices();
-  
-      //   alert( item.type + " removed successfuly");
-      // })
-      // .catch(err => {
-      //   console.error(err);
-      // })
 
       let data = {
         method: 'DELETE',
@@ -154,8 +98,9 @@ export default class DevicesScreen extends Component {
           alert( `${item.type} removed successfuly`);
         })
         .catch((error) => {
-            console.log(error)
-            alert(error);
+          this.props.navigation.navigate('Login', {isLoading: true});
+          //  console.log(error)
+          //  alert(error);
         });
   
     };

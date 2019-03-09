@@ -107,7 +107,8 @@ export default class AddEditDeviceScreen extends Component {
             this.props.navigation.navigate('Devices', {isLoading: true});
         })
         .catch((error) => {
-            alert(error);
+            //alert(error);
+            this.props.navigation.navigate('Login', {isLoading: true});
         });
     }
 

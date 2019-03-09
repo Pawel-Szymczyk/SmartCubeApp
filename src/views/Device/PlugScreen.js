@@ -16,6 +16,7 @@ export default class PlugScreen extends Component {
           isLoading: true, 
           name: '',
           deviceId: this.params.deviceId,
+          serialNumber: '',
           plugData: [],
           plugState: false,
           isSet: false
@@ -32,7 +33,7 @@ export default class PlugScreen extends Component {
 
     // load data from server
     componentDidMount() {
-        if(this.state.isSet) {
+       // if(this.state.isSet) {
 
             this.setState({ isLoading: true });
 
@@ -47,14 +48,16 @@ export default class PlugScreen extends Component {
             Utilities.serverRequest(`/api/v1/devices/plug/${this.params.deviceId}`, data)
             .then((res) => {
                 this.setState({
-                    plugState: res.powerState
+                    plugState: res.powerState,
+                    serialNumber: res.serialNumber
                 });
             })
             .catch((error) => {
-                alert(error);
+                this.props.navigation.navigate('Login', {isLoading: true});
+                //alert(error);
             });
 
-        }
+      //  }
     }
 
 
@@ -77,7 +80,7 @@ export default class PlugScreen extends Component {
                 name: this.params.deviceObject.name,
                 type: this.params.deviceObject.type,
                 powerState: !this.state.plugState,
-                serialNumber: "PG000001-CUBE",
+                serialNumber: this.state.serialNumber,
                 topic: this.params.deviceObject.topic,
                 areaId: this.params.deviceObject.areaId
             })
@@ -90,7 +93,8 @@ export default class PlugScreen extends Component {
               });
           })
           .catch((error) => {
-              alert(error);
+            this.props.navigation.navigate('Login', {isLoading: true});
+            //  alert(error);
           });
 
     };
@@ -129,7 +133,6 @@ export default class PlugScreen extends Component {
                             <Text style={styles.textBox2}>{item.key}</Text>
                         </View>
                     )}
-                    
                     
                     />
                 </View>

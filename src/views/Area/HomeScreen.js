@@ -70,9 +70,8 @@ export default class HomeScreen extends Component {
         })
       })
       .catch((error) => {
-          // this.props.navigation.navigate('Login', {isLoading: true});
-          console.log(error)
-          alert(error);
+          this.props.navigation.navigate('Login', {isLoading: true});
+         // alert(error + "no valid token");
       });
     
   };
@@ -88,24 +87,33 @@ export default class HomeScreen extends Component {
       },
     }
 
-    Utilities.serverRequest(`/api/v1/areas/${item.areaId}`, data)
-      .then((res) => {
-        this.loadAreas();
-        alert("Area removed successfuly");
-      })
-      .catch((error) => {
-          console.log(error)
-          alert(error);
-      });
+    if(item.areaState == 'Opened' || (item.areaState == 'Closed' && item.owner == this.context.user.username)) {
 
+      Utilities.serverRequest(`/api/v1/areas/${item.areaId}`, data)
+        .then((res) => {
+          this.loadAreas();
+          alert("Area removed successfuly");
+        })
+        .catch((error) => {
+          this.props.navigation.navigate('Login', {isLoading: true});
+            // alert(error);
+        });
+      
+    } else {
+      alert('This area is restricted')
+    }
   };
 
   handleEditArea(item) {
-    this.navigate("AddEditArea", {
-      name: 'Edit Area',
-      areaId: item.areaId,
-      isEdit: true
-    });
+    if(item.areaState == 'Opened' || (item.areaState == 'Closed' && item.owner == this.context.user.username)) {
+      this.navigate("AddEditArea", {
+        name: 'Edit Area',
+        areaId: item.areaId,
+        isEdit: true
+      });
+    } else {
+      alert('This area is restricted')
+    }
   }
 
   handleAddArea() {
@@ -116,10 +124,23 @@ export default class HomeScreen extends Component {
   }
 
   actionOnRow(item) {
-    this.navigate("Devices", {
-      areaId: item.areaId,
-      areaName: item.name
-    });
+
+    if(item.areaState == 'Opened') { 
+      // area open for everyone
+      this.navigate("Devices", {
+        areaId: item.areaId,
+        areaName: item.name,
+      });
+    } else if(item.areaState == 'Closed' && item.owner == this.context.user.username) {
+      // area open only for owner
+      this.navigate("Devices", {
+        areaId: item.areaId,
+        areaName: item.name,
+      });
+    } else {
+      alert('This area is restricted')
+    }
+
   }
 
   render() {

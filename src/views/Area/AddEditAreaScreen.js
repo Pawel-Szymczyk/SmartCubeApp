@@ -67,9 +67,9 @@ export default class AddEditAreaScreen extends Component {
                   })
                 })
                 .catch((error) => {
-                    // this.props.navigation.navigate('Login', {isLoading: true});
-                    console.log(error)
-                    alert(error);
+                    this.props.navigation.navigate('Login', {isLoading: true});
+                    // console.log(error)
+                    // alert(error);
                 });
 
         } else {
@@ -116,7 +116,8 @@ export default class AddEditAreaScreen extends Component {
                 this.props.navigation.navigate('Home', {isLoading: true});
             })
             .catch((error) => {
-                alert(error);
+                this.props.navigation.navigate('Login', {isLoading: true});
+                //alert(error);
             });
       
     }
