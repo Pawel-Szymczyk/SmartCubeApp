@@ -2,14 +2,12 @@ import React, {Component} from 'react';
 import {AsyncStorage, Platform, StyleSheet, View, Image, TouchableOpacity, Text, FlatList, Dimensions, Alert } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker';
-import Constants from "../../components/Constants";
 import AppContext from '../../components/AppContext';
 
 const options={
   title: 'Select Avatar',
   takePhotoButtonTitle: 'Take Photo',
   chooseFromLibraryButtonTitle: 'Choose Photo From Library',
-  
 }
 
 export default class AvatarScreen extends Component {
@@ -47,25 +45,26 @@ export default class AvatarScreen extends Component {
      }
   }
 
-
   getAvatarImage = async() => {
 
     if(this.state.avatarSource == null) {
       let avatarDetails = await AsyncStorage.getItem('avatarDetails');
-      let parsed = JSON.parse(avatarDetails);
 
-      this.setState({
-        avatarSource: parsed.source,
-      });
-    } else {
-      //alert("@")
-    }
+      if(avatarDetails != null) {
+        let parsed = JSON.parse(avatarDetails);
 
+        this.setState({
+          avatarSource: parsed.source,
+        });
+      } else {
+        this.setState({
+          avatarSource: require('../../images/default.png')
+        });
+      }
+    } 
   }
 
   handleAvatarImage() {
-    
-
     ImagePicker.showImagePicker(options, (response) => {
      // console.log('Response = ', response);
     
@@ -79,8 +78,6 @@ export default class AvatarScreen extends Component {
         // store in local memeory...
         this.storeAvatarDetails(source);
 
-        
-    
         this.setState({
           avatarSource: source,
         });
@@ -88,20 +85,39 @@ export default class AvatarScreen extends Component {
     });
   }
 
+  removeAvatarAlert() {
+    Alert.alert(
+      'Delete',
+      'Do you want to delete the image?',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'OK', onPress: () => this.removeAvatar()},
+      ],
+      { cancelable: false }
+    )
+  }
+
+  removeAvatar = async() => {
+    let value = await AsyncStorage.getItem('avatarDetails');
+    if(value !== null) {
+        AsyncStorage.removeItem('avatarDetails');
+    }
+
+    this.setState({
+      avatarSource: require('../../images/default.png')
+    });
+  }
+
   render() {
     return (
       <View style={styles.scene}>
+        <TouchableOpacity onLongPress={()=>this.removeAvatarAlert()} activeOpacity={0.7} >
+          <Image source={this.state.avatarSource} style={styles.avatar} /> 
+        </TouchableOpacity>
 
-        <Image source={this.state.avatarSource}
-          style={styles.avatar}
-        />
-
-        <TouchableOpacity style={styles.btn}
-          onPress={()=>this.handleAvatarImage()}
-        >
+        <TouchableOpacity style={styles.btn} onPress={()=>this.handleAvatarImage()} >
           <Text style={styles.label}>Select Image</Text>
         </TouchableOpacity>
-        
       </View>  
     )
   }
@@ -112,29 +128,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 30,
-    
   },
-
   avatar: {
     width: 400, 
     height:400, 
     borderRadius: 200,
     marginBottom: 330,
   },
-
   btn: {
     backgroundColor: '#34495e', 
     borderRadius: 7,
     width: 260,
     padding: 10,
   },
-
   label: {
     color: '#fff', 
     textAlign: 'center', 
     fontWeight: '700',
   }
-
 });
 
 AvatarScreen.contextType = AppContext

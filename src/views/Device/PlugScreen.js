@@ -4,7 +4,6 @@ import { AsyncStorage, View, Text, StyleSheet, Switch, TouchableOpacity, FlatLis
 import AppContext from '../../components/AppContext';
 import Utilities from '../../components/Utilities';
 
-
 export default class PlugScreen extends Component {
 
     constructor(props) {
@@ -26,7 +25,7 @@ export default class PlugScreen extends Component {
 
     static navigationOptions = ({ navigation }) => {
       return {
-        title: navigation.getParam('deviceName', 'Rollet'),
+        title: navigation.getParam('deviceName', 'Plug'),
       };
     };
 

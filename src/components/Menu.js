@@ -10,8 +10,9 @@ export default class MenuComponent extends Component {
   constructor(props) {
     super(props)
 
+
     this.state = {
-      avatarImage: null //'http://facebook.github.io/react-native/img/opengraph.png?2' // default image?
+      avatarImage: null 
     }
   }
 
@@ -26,7 +27,6 @@ export default class MenuComponent extends Component {
   };
 
   componentDidMount() {
-    
     this.handleImage();
   }
 
@@ -44,10 +44,7 @@ export default class MenuComponent extends Component {
           avatarImage: 'http://facebook.github.io/react-native/img/opengraph.png?2'
         })
       }
-    } else { 
-      console.log("not null")
-      // do nth
-    }
+    } 
   }
 
   handleLogout = async() => {
@@ -92,7 +89,6 @@ export default class MenuComponent extends Component {
         value: 'Logout',
         icon: 'exit-to-app',
         onPress: () => {
-            
           this.handleLogout()
         }
     },
@@ -105,7 +101,6 @@ export default class MenuComponent extends Component {
       >
         <Avatar
           size={40}
-          //icon="person"
           image={
             <Image style={{width: 60, height: 60, borderRadius:100}}
               source={{ uri: this.state.avatarImage }} 
@@ -113,7 +108,6 @@ export default class MenuComponent extends Component {
           }
         />
       </TouchableOpacity>
-      
     )
     return (
       <Drawer>

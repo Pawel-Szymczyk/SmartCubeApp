@@ -20,6 +20,7 @@ import DevicesScreen from './src/views/Device/DevicesScreen';
 import AddEditDeviceScreen from './src/views/Device/AddEditDeviceScreen';
 import RolletScreen from './src/views/Device/RolletScreen';
 import PlugScreen from './src/views/Device/PlugScreen';
+import RGBScreen from './src/views/Device/RgbScreen';
 import AvatarScreen from './src/views/Settings/AvatarScreen';
 
 // -------------------------------------------------------------
@@ -101,6 +102,11 @@ const RootStack = createStackNavigator({
 
   plug: {
     screen: PlugScreen,
+    navigationOptions: defaultStyling,
+  },
+
+  rgb: {
+    screen: RGBScreen,
     navigationOptions: defaultStyling,
   },
 
