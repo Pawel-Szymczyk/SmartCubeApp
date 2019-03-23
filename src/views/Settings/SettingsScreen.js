@@ -15,6 +15,12 @@ export default class SettingsScreen extends Component {
     };
   }
 
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: "Settings",
+    };
+  };
+
 
 
 

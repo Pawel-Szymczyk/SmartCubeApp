@@ -200,7 +200,7 @@ export default class LoginScreen extends Component {
                             style={styles.buttonContainer}
                             onPress = { () => this.handleLogin() }
                         >
-                            <Text style={styles.buttonText}>Sign In</Text>
+                            <Text style={styles.buttonText}>Log In</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity

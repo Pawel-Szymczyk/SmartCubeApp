@@ -20,6 +20,7 @@ import DevicesScreen from './src/views/Device/DevicesScreen';
 import AddEditDeviceScreen from './src/views/Device/AddEditDeviceScreen';
 import RolletScreen from './src/views/Device/RolletScreen';
 import PlugScreen from './src/views/Device/PlugScreen';
+import AvatarScreen from './src/views/Settings/AvatarScreen';
 
 // -------------------------------------------------------------
 
@@ -110,6 +111,11 @@ const RootStack = createStackNavigator({
     navigationOptions: defaultStyling,
   },
 
+  Avatar: {
+    screen: AvatarScreen,
+    navigationOptions: defaultStyling,
+  },
+
 });
 
 // -------------------------------------------------------------
@@ -129,8 +135,7 @@ const RootDrawer = createDrawerNavigator({
 const AppStack = createStackNavigator({
   drawer: {
     screen: RootDrawer,
-  }
-  },
+  }},
   {
     initialRouteName: 'drawer',
     headerMode:'none',
