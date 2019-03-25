@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {AsyncStorage, Platform, StyleSheet, View, Image, TouchableOpacity, Text, FlatList, Dimensions, Alert } from 'react-native';
+import {AsyncStorage, StyleSheet, View, Image, TouchableOpacity, Text, Alert, DeviceEventEmitter } from 'react-native';
 
 import ImagePicker from 'react-native-image-picker';
 import AppContext from '../../components/AppContext';
@@ -46,7 +46,6 @@ export default class AvatarScreen extends Component {
   }
 
   getAvatarImage = async() => {
-
     if(this.state.avatarSource == null) {
       let avatarDetails = await AsyncStorage.getItem('avatarDetails');
 
@@ -56,6 +55,7 @@ export default class AvatarScreen extends Component {
         this.setState({
           avatarSource: parsed.source,
         });
+
       } else {
         this.setState({
           avatarSource: require('../../images/default.png')
@@ -77,6 +77,9 @@ export default class AvatarScreen extends Component {
 
         // store in local memeory...
         this.storeAvatarDetails(source);
+
+        // Upload (emit) the 'avatar' object
+        DeviceEventEmitter.emit('avatar');
 
         this.setState({
           avatarSource: source,
@@ -100,7 +103,7 @@ export default class AvatarScreen extends Component {
   removeAvatar = async() => {
     let value = await AsyncStorage.getItem('avatarDetails');
     if(value !== null) {
-        AsyncStorage.removeItem('avatarDetails');
+      AsyncStorage.removeItem('avatarDetails');
     }
 
     this.setState({

@@ -1,6 +1,6 @@
 import React, { Component,} from 'react';
 import {NavigationActions} from 'react-navigation';
-import {StyleSheet, AsyncStorage, Image, TouchableOpacity } from 'react-native';
+import {StyleSheet, AsyncStorage, Image, TouchableOpacity, DeviceEventEmitter } from 'react-native';
 import AppContext from "../components/AppContext";
 import { Drawer, Avatar, } from 'react-native-material-ui'; 
 
@@ -10,10 +10,30 @@ export default class MenuComponent extends Component {
   constructor(props) {
     super(props)
 
-
     this.state = {
-      avatarImage: null 
+      avatarImage: 'http://facebook.github.io/react-native/img/opengraph.png?2' 
     }
+
+    // Update Avatar Image
+    DeviceEventEmitter.addListener('avatar', async() => {
+      this.handleAvatarImage();
+    })
+  }
+
+
+  handleAvatarImage = async() => {
+    let avatarDetails = await AsyncStorage.getItem('avatarDetails');
+      if(avatarDetails != null) {
+        let parsed = JSON.parse(avatarDetails);
+        this.setState({
+           avatarImage: parsed.source.uri
+        })
+      } else {
+        //set default avatar image
+        this.setState({
+          avatarImage: 'http://facebook.github.io/react-native/img/opengraph.png?2'
+        })
+      }
   }
 
   navigateToScreen = (route, data) => {
@@ -27,24 +47,7 @@ export default class MenuComponent extends Component {
   };
 
   componentDidMount() {
-    this.handleImage();
-  }
-
-  handleImage = async() => {
-    if(this.state.avatarImage == null) {
-      let avatarDetails = await AsyncStorage.getItem('avatarDetails');
-      if(avatarDetails != null) {
-        let parsed = JSON.parse(avatarDetails);
-        this.setState({
-           avatarImage: parsed.source.uri
-        })
-      } else {
-        //set default avatar image
-        this.setState({
-          avatarImage: 'http://facebook.github.io/react-native/img/opengraph.png?2'
-        })
-      }
-    } 
+    this.handleAvatarImage();
   }
 
   handleLogout = async() => {
